@@ -1010,7 +1010,7 @@
   <!-- ===== 価格編集カード ===== -->
   <div class="teacher-mode card" id="priceEditCard">
     <div class="card-title">💰 単価編集</div>
-    <div class="teacher-notice">📌 ここで変更した単価はこのブラウザに保存され、次回以降も反映されます。</div>
+    <div class="teacher-notice">📌 ここで変更した単価はこのブラウザに保存され、次回以降も反映されます。<br>単価表に登録されている価格は<strong>請求単価</strong>です（仕入価格×1.2済み）。</div>
 
     <div class="tab-buttons">
       <button class="tab-btn active" id="peWoodBtn" onclick="switchPriceTab('wood')">📐 体積計算（木材・アクリル・スタイロなど）</button>
@@ -1024,7 +1024,7 @@
       <!-- 仕入れ計算ツール -->
       <div class="purchase-calc-box">
         <div class="purchase-calc-title">🧮 仕入れから単価を計算して追加</div>
-        <div class="pc-steps-desc">買ってきた木材の寸法・本数・購入金額を入力すると、販売単価（仕入×1.2）を自動計算します。そのまま樹種名を入力して追加できます。</div>
+        <div class="pc-steps-desc">買ってきた木材の寸法・本数・購入金額を入力すると、請求単価（仕入×1.2）を自動計算します。そのまま樹種名を入力して単価表に追加できます。</div>
 
         <div class="pc-step-label">① 仕入れ情報を入力</div>
         <div class="purchase-calc-row">
@@ -1052,7 +1052,7 @@
 
         <div class="pc-step-label">② 計算結果（自動表示）</div>
         <div class="purchase-calc-result" id="pcWoodResult">
-          <span class="pc-hint">① を入力すると、ここに立米単価と販売単価が表示されます</span>
+          <span class="pc-hint">① を入力すると、ここに立米単価と請求単価が表示されます</span>
         </div>
 
         <div class="pc-step-label">③ 樹種名を入力して追加</div>
@@ -1078,7 +1078,7 @@
       <!-- 仕入れ計算ツール（フィラメント） -->
       <div class="purchase-calc-box">
         <div class="purchase-calc-title">🧮 仕入れから単価を計算して追加</div>
-        <div class="pc-steps-desc">買ってきたフィラメントの購入量と金額を入力すると、1gあたりの販売単価（仕入×1.2）を自動計算します。そのまま種類名を入力して追加できます。</div>
+        <div class="pc-steps-desc">買ってきたフィラメントの購入量と金額を入力すると、1gあたりの請求単価（仕入×1.2）を自動計算します。そのまま種類名を入力して単価表に追加できます。</div>
 
         <div class="pc-step-label">① 仕入れ情報を入力</div>
         <div class="purchase-calc-row">
@@ -1094,7 +1094,7 @@
 
         <div class="pc-step-label">② 計算結果（自動表示）</div>
         <div class="purchase-calc-result" id="pcFilamentResult">
-          <span class="pc-hint">① を入力すると、ここに1gあたりの販売単価が表示されます</span>
+          <span class="pc-hint">① を入力すると、ここに1gあたりの請求単価が表示されます</span>
         </div>
 
         <div class="pc-step-label">③ 種類名を入力して追加</div>
@@ -1449,7 +1449,7 @@ function calcWood() {
   }
 
   const volM3 = (L / 1000) * (W / 1000) * (H / 1000) * qty;
-  const finalPrice = Math.ceil(volM3 * pricePerM3 * MARKUP);
+  const finalPrice = Math.ceil(volM3 * pricePerM3);
   woodCalcPrice = finalPrice;
 
   amountEl.className = 'amount';
@@ -1482,7 +1482,7 @@ function calcFilament() {
     return;
   }
 
-  const finalPrice = Math.ceil(weight * pricePerG * MARKUP);
+  const finalPrice = Math.ceil(weight * pricePerG);
   filamentCalcPrice = finalPrice;
 
   amountEl.className = 'amount';
@@ -1662,7 +1662,7 @@ function updateCompareResult() {
   const volM3 = (L/1000) * (W/1000) * (H/1000) * qty;
   const results = WOOD_PRICES.map(w => ({
     name: w.name,
-    price: Math.ceil(volM3 * w.pricePerM3 * MARKUP),
+    price: Math.ceil(volM3 * w.pricePerM3),
   })).sort((a, b) => a.price - b.price);
 
   const minPrice = results[0].price;
@@ -1875,7 +1875,7 @@ function calcTeacherWood() {
     document.getElementById('tAddWoodBtn').disabled = true;
     return;
   }
-  tWoodPrice = Math.ceil((L/1000)*(W/1000)*(H/1000)*qty * pricePerM3 * MARKUP);
+  tWoodPrice = Math.ceil((L/1000)*(W/1000)*(H/1000)*qty * pricePerM3);
   document.getElementById('tWoodAmount').className = 'amount';
   document.getElementById('tWoodAmount').innerHTML = `${tWoodPrice.toLocaleString()} <span>円</span>`;
   document.getElementById('tWoodDetail').innerHTML = `${speciesName} × ${qty}本　${L}×${W}×${H}mm`;
@@ -1896,7 +1896,7 @@ function calcTeacherFilament() {
     document.getElementById('tAddFilamentBtn').disabled = true;
     return;
   }
-  tFilamentPrice = Math.ceil(weight * pricePerG * MARKUP);
+  tFilamentPrice = Math.ceil(weight * pricePerG);
   document.getElementById('tFilamentAmount').className = 'amount';
   document.getElementById('tFilamentAmount').innerHTML = `${tFilamentPrice.toLocaleString()} <span>円</span>`;
   document.getElementById('tFilamentDetail').innerHTML = `${typeName}　${weight}g`;
@@ -2370,7 +2370,7 @@ function calcPurchaseWood() {
     <div class="pc-result-line">
       <div class="pc-result-text">
         体積：${volM3.toFixed(4)} m³（${qty}本）<br>
-        仕入単価：¥${pricePerM3.toLocaleString()} /m³　→　<strong style="color:#276749;">販売単価：¥${sellingPerM3.toLocaleString()} /m³</strong>（×1.2）
+        仕入単価：¥${pricePerM3.toLocaleString()} /m³　→　<strong style="color:#276749;">請求単価：¥${sellingPerM3.toLocaleString()} /m³</strong>（×1.2）
       </div>
       <button class="pc-apply-btn" onclick="applyWoodPurchasePrice(${sellingPerM3})">この単価を新規追加に反映</button>
     </div>
@@ -2398,7 +2398,7 @@ function calcPurchaseFilament() {
   resultEl.innerHTML = `
     <div class="pc-result-line">
       <div class="pc-result-text">
-        仕入単価：¥${pricePerG.toFixed(2)} /g　→　<strong style="color:#276749;">販売単価：¥${sellingPerG} /g</strong>（×1.2）
+        仕入単価：¥${pricePerG.toFixed(2)} /g　→　<strong style="color:#276749;">請求単価：¥${sellingPerG} /g</strong>（×1.2）
       </div>
       <button class="pc-apply-btn" onclick="applyFilamentPurchasePrice(${sellingPerG})">この単価を新規追加に反映</button>
     </div>
