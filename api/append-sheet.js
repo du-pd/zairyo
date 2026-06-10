@@ -2,6 +2,7 @@ import { google } from "googleapis";
 
 function getSheetsClient() {
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  // Environment variables often store private keys with escaped "\\n"; convert them back for JWT parsing.
   const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
   if (!clientEmail || !privateKey) {

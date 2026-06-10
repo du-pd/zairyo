@@ -3,7 +3,7 @@
 ## 1. ディレクトリ構成
 
 ```txt
-/home/runner/work/zairyo/zairyo/du-pd/zairyo
+.
 ├─ api/
 │  ├─ append-sheet.js
 │  ├─ reverse-geocode.js
@@ -17,19 +17,19 @@
 
 ## 2. 各ファイルの役割
 
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/index.html`
+- `index.html`
   - MVP画面（撮影→確認→送信→完了）
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/styles.css`
+- `styles.css`
   - モバイル向けの基本UIスタイル
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/app.js`
+- `app.js`
   - Geolocation取得、Nominatim呼び出し、Gemini OCR実行、立米単価計算、送信処理
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/api/scan-tag.js`
+- `api/scan-tag.js`
   - Gemini 1.5 Flashへ画像を送り、構造化データを返すAPI
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/api/reverse-geocode.js`
+- `api/reverse-geocode.js`
   - 緯度経度をNominatimで逆ジオコーディングするAPI
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/api/append-sheet.js`
+- `api/append-sheet.js`
   - Google Sheets APIへ1行追加するAPI
-- `/home/runner/work/zairyo/zairyo/du-pd/zairyo/package.json`
+- `package.json`
   - 依存パッケージとローカル実行スクリプト
 
 ## 3. フェーズ1（MVP）の実装内容
@@ -63,6 +63,8 @@ Vercelプロジェクトの Environment Variables に以下を設定:
   - 保存先スプレッドシートID
 - `GOOGLE_SHEET_NAME`
   - シート名（例: `prices`）
+- `NOMINATIM_CONTACT_EMAIL`
+  - NominatimのUser-Agentに含める連絡先メールアドレス
 
 ### Google Sheets側の事前設定
 

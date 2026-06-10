@@ -6,39 +6,44 @@ const PREFECTURES = [
   "佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"
 ];
 
+// 1m³ = 1,000mm × 1,000mm × 1,000mm = 1,000,000,000mm³
+const MM3_TO_M3_DIVISOR = 1_000_000_000;
+const GEOLOCATION_TIMEOUT_MS = 8000;
+const GEOLOCATION_MAX_AGE_MS = 60000;
+
 const state = {
   imageBase64: "",
   mimeType: "image/jpeg",
   location: { prefecture: "", city: "", source: "manual" }
 };
 
-const $ = (id) => document.getElementById(id);
+const getElement = (id) => document.getElementById(id);
 
 const els = {
-  geoStatus: $("geoStatus"),
-  locationAuto: $("locationAuto"),
-  locationManual: $("locationManual"),
-  prefectureText: $("prefectureText"),
-  cityText: $("cityText"),
-  manualPrefecture: $("manualPrefecture"),
-  manualCity: $("manualCity"),
-  photoInput: $("photoInput"),
-  storeName: $("storeName"),
-  scanButton: $("scanButton"),
-  scanStatus: $("scanStatus"),
-  confirmSection: $("confirmSection"),
-  species: $("species"),
-  priceYen: $("priceYen"),
-  widthMm: $("widthMm"),
-  heightMm: $("heightMm"),
-  lengthMm: $("lengthMm"),
-  quantity: $("quantity"),
-  note: $("note"),
-  volumeText: $("volumeText"),
-  unitPriceText: $("unitPriceText"),
-  submitButton: $("submitButton"),
-  submitStatus: $("submitStatus"),
-  doneSection: $("doneSection")
+  geoStatus: getElement("geoStatus"),
+  locationAuto: getElement("locationAuto"),
+  locationManual: getElement("locationManual"),
+  prefectureText: getElement("prefectureText"),
+  cityText: getElement("cityText"),
+  manualPrefecture: getElement("manualPrefecture"),
+  manualCity: getElement("manualCity"),
+  photoInput: getElement("photoInput"),
+  storeName: getElement("storeName"),
+  scanButton: getElement("scanButton"),
+  scanStatus: getElement("scanStatus"),
+  confirmSection: getElement("confirmSection"),
+  species: getElement("species"),
+  priceYen: getElement("priceYen"),
+  widthMm: getElement("widthMm"),
+  heightMm: getElement("heightMm"),
+  lengthMm: getElement("lengthMm"),
+  quantity: getElement("quantity"),
+  note: getElement("note"),
+  volumeText: getElement("volumeText"),
+  unitPriceText: getElement("unitPriceText"),
+  submitButton: getElement("submitButton"),
+  submitStatus: getElement("submitStatus"),
+  doneSection: getElement("doneSection")
 };
 
 function fillPrefectures() {
@@ -65,9 +70,25 @@ async function detectLocation() {
     } catch (e) {
       enableManualLocation(`位置情報の住所変換に失敗: ${e.message}`);
     }
-  }, () => {
-    enableManualLocation("位置情報が拒否されたため手動入力に切り替えました。");
-  }, { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 });
+  }, (error) => {
+    if (error?.code === 1) {
+      enableManualLocation("位置情報が拒否されたため手動入力に切り替えました。");
+      return;
+    }
+    if (error?.code === 2) {
+      enableManualLocation("現在地を特定できなかったため手動入力に切り替えました。");
+      return;
+    }
+    if (error?.code === 3) {
+      enableManualLocation("位置情報の取得がタイムアウトしたため手動入力に切り替えました。");
+      return;
+    }
+    enableManualLocation("位置情報の取得に失敗したため手動入力に切り替えました。");
+  }, {
+    enableHighAccuracy: false,
+    timeout: GEOLOCATION_TIMEOUT_MS,
+    maximumAge: GEOLOCATION_MAX_AGE_MS
+  });
 }
 
 function enableManualLocation(message) {
@@ -97,7 +118,7 @@ function calcVolumeAndUnitPrice() {
   const qty = Math.max(1, toNumber(els.quantity.value, 1));
   const price = toNumber(els.priceYen.value);
 
-  const volumeM3 = (width * height * length * qty) / 1_000_000_000;
+  const volumeM3 = (width * height * length * qty) / MM3_TO_M3_DIVISOR;
   const unitPrice = volumeM3 > 0 ? price / volumeM3 : 0;
 
   els.volumeText.textContent = volumeM3 > 0 ? volumeM3.toFixed(6) : "-";

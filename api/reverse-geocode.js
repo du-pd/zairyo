@@ -2,6 +2,10 @@ function pickCity(address = {}) {
   return address.city || address.town || address.village || address.county || "";
 }
 
+const NOMINATIM_REVERSE_URL = "https://nominatim.openstreetmap.org/reverse";
+// Nominatimのzoom=10は市区町村レベルの粒度（詳細住所ではなく自治体単位）を狙う設定
+const NOMINATIM_ZOOM_LEVEL = 10;
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method Not Allowed" });
@@ -12,18 +16,23 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "lat and lon are required" });
   }
 
-  const url = new URL("https://nominatim.openstreetmap.org/reverse");
+  const url = new URL(NOMINATIM_REVERSE_URL);
   url.searchParams.set("format", "jsonv2");
   url.searchParams.set("lat", String(lat));
   url.searchParams.set("lon", String(lon));
-  url.searchParams.set("zoom", "10");
+  url.searchParams.set("zoom", String(NOMINATIM_ZOOM_LEVEL));
   url.searchParams.set("addressdetails", "1");
   url.searchParams.set("accept-language", "ja");
 
   try {
+    const contactEmail = process.env.NOMINATIM_CONTACT_EMAIL;
+    if (!contactEmail) {
+      return res.status(500).json({ error: "NOMINATIM_CONTACT_EMAIL is missing" });
+    }
+
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "zairyo-mokuzai-app/1.0 (contact: example@example.com)"
+        "User-Agent": `zairyo-mokuzai-app/1.0 (contact: ${contactEmail})`
       }
     });
     const data = await response.json();

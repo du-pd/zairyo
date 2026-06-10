@@ -3,6 +3,24 @@ function safeNumber(value, fallback = 0) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+const OCR_PROMPT = [
+  "あなたは木材値札OCRの抽出器です。",
+  "画像から以下のJSONだけを返してください。",
+  "{",
+  '  "species": "樹種文字列",',
+  '  "widthMm": 数値,',
+  '  "heightMm": 数値,',
+  '  "lengthMm": 数値,',
+  '  "priceYen": 数値,',
+  '  "quantity": 数値,',
+  '  "note": "補足"',
+  "}",
+  "数値が不明な場合は0、数量が不明な場合は1。単位はmm/円で統一。"
+].join("\n");
+
+const GEMINI_GENERATE_CONTENT_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+
 function normalizeResult(raw = {}) {
   return {
     species: String(raw.species || "").trim(),
@@ -30,32 +48,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "imageBase64 is required" });
   }
 
-  const prompt = [
-    "あなたは木材値札OCRの抽出器です。",
-    "画像から以下のJSONだけを返してください。",
-    "{",
-    '  "species": "樹種文字列",',
-    '  "widthMm": 数値,',
-    '  "heightMm": 数値,',
-    '  "lengthMm": 数値,',
-    '  "priceYen": 数値,',
-    '  "quantity": 数値,',
-    '  "note": "補足"',
-    "}",
-    "数値が不明な場合は0、数量が不明な場合は1。単位はmm/円で統一。"
-  ].join("\n");
-
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      GEMINI_GENERATE_CONTENT_URL,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
         body: JSON.stringify({
           contents: [
             {
               parts: [
-                { text: prompt },
+                { text: OCR_PROMPT },
                 {
                   inline_data: {
                     mime_type: mimeType || "image/jpeg",
@@ -85,7 +91,15 @@ export default async function handler(req, res) {
       return res.status(422).json({ error: "Gemini response is empty" });
     }
 
-    const parsed = JSON.parse(rawText);
+    let parsed;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch {
+      return res.status(422).json({
+        error: "Gemini response is not valid JSON. 画像の傾き補正や再撮影を行い、値札全体が写るようにしてください。"
+      });
+    }
+
     return res.status(200).json(normalizeResult(parsed));
   } catch (error) {
     return res.status(500).json({ error: error.message || "Unexpected error" });
