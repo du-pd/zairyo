@@ -427,7 +427,7 @@
   }
   .item-row .item-info { flex: 1; }
   .item-row .item-name { font-weight: 700; font-size: 0.95rem; color: #2d3748; }
-  .item-row .item-detail { font-size: 0.8rem; color: #718096; margin-top: 2px; }
+  .item-row .item-detail { font-size: 0.92rem; color: #718096; margin-top: 2px; }
   .item-row .item-price {
     font-weight: 800;
     font-size: 1.1rem;
@@ -1734,7 +1734,7 @@ function addWoodItem() {
   document.getElementById('woodW').value = '';
   document.getElementById('woodH').value = '';
   document.getElementById('woodQty').value = 1;
-  document.getElementById('woodSpecies').value = '';
+  // 材料の選択は維持（同じ材料を続けて追加しやすくするため）
   calcWood();
 }
 
@@ -1803,7 +1803,7 @@ function addFilamentItem() {
   renderList();
 
   document.getElementById('filamentWeight').value = '';
-  document.getElementById('filamentType').value = '';
+  // 材料の選択は維持（同じ材料を続けて追加しやすくするため）
   calcFilament();
 }
 
@@ -2142,7 +2142,7 @@ function addTeacherWood() {
   document.getElementById('tWoodW').value = '';
   document.getElementById('tWoodH').value = '';
   document.getElementById('tWoodQty').value = 1;
-  document.getElementById('tWoodSpecies').value = '';
+  // 材料の選択は維持（同じ材料を続けて追加しやすくするため）
   calcTeacherWood();
 }
 
@@ -2152,7 +2152,7 @@ function addTeacherFilament() {
   tItems.push({ type:'filament', name: fType.options[fType.selectedIndex].text, detail:`${weight}g`, price: tFilamentPrice });
   renderTeacherList();
   document.getElementById('tFilamentWeight').value = '';
-  document.getElementById('tFilamentType').value = '';
+  // 材料の選択は維持（同じ材料を続けて追加しやすくするため）
   calcTeacherFilament();
 }
 
