@@ -2260,19 +2260,39 @@ function copyRequestURL() {
 function openTeamsWithURL() {
   const url = document.getElementById('tGeneratedUrl').value;
   const studentName = document.getElementById('tStudentName').value.trim() || '学生';
-  const message = '【材料費確認依頼】\n' + studentName + 'さん、以下のURLを開いて材料費の確認をお願いします。\n' + url;
-  // メッセージをクリップボードにコピー
-  navigator.clipboard.writeText(message).then(() => {
-    // Teamsを起動
+  // 長いURLそのままではなく「リンクの貼られた文字列」になるようHTML形式でコピー
+  copyTeamsMessage(url, studentName).then(() => {
     window.open('msteams://', '_blank');
-    // ガイドメッセージを表示
     const msg = document.getElementById('tCopyMsg');
-    msg.textContent = '✅ メッセージをコピーしました！Teamsで学生を選んで貼り付けてください';
+    msg.textContent = '✅ コピーしました！Teamsで学生を選んで貼り付けると「材料費を確認する」リンクになります';
     msg.style.display = 'block';
-    setTimeout(() => { msg.style.display = 'none'; msg.textContent = '✅ コピーしました！Teamsに貼り付けて送ってください'; }, 5000);
+    setTimeout(() => { msg.style.display = 'none'; msg.textContent = '✅ コピーしました！Teamsに貼り付けて送ってください'; }, 6000);
   }).catch(() => {
     window.open('msteams://', '_blank');
   });
+}
+
+// メッセージをHTML（クリック可能なリンク文字列）でコピー。非対応環境ではプレーンURLにフォールバック
+async function copyTeamsMessage(url, studentName) {
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const linkText = '材料費を確認する（クリック）';
+  const plain = '【材料費確認依頼】\n' + studentName + 'さん、下のリンクから材料費の確認をお願いします。\n' + url;
+  const html = '<p>【材料費確認依頼】<br>' + esc(studentName) +
+    'さん、下のリンクから材料費の確認をお願いします。<br>' +
+    '<a href="' + esc(url) + '">' + linkText + '</a></p>';
+  try {
+    if (navigator.clipboard && window.ClipboardItem) {
+      const item = new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([plain], { type: 'text/plain' }),
+      });
+      await navigator.clipboard.write([item]);
+      return;
+    }
+  } catch (e) {
+    // HTMLコピー非対応 → プレーンへ
+  }
+  await navigator.clipboard.writeText(plain);
 }
 
 function resetTeacher() {
