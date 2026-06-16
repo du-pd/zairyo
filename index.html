@@ -5,33 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>材料費計算システム</title>
 <style>
-  /* ===== モード切替 ===== */
-  .mode-switcher {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: auto;
-    background: rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 4px;
-  }
-  .mode-btn {
-    padding: 7px 18px;
-    border: none;
-    border-radius: 7px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s;
-    background: transparent;
-    color: rgba(255,255,255,0.7);
-  }
-  .mode-btn.active {
-    background: white;
-    color: #2b4c7e;
-  }
-
   /* ===== 教員確認依頼カード ===== */
   .pending-card {
     background: #fff8f0;
@@ -845,10 +818,6 @@
   <div>
     <h1>🪵 材料費計算システム</h1>
     <span>木材・3Dフィラメント 利用申請</span>
-  </div>
-  <div class="mode-switcher" id="modeSwitcher" style="display:none;">
-    <button class="mode-btn active" id="btnStudent" onclick="setMode('student')">👤 利用者</button>
-    <button class="mode-btn" id="btnTeacher" onclick="setMode('teacher')">👩‍🏫 教員</button>
   </div>
 </header>
 
@@ -2029,16 +1998,14 @@ function resetAll() {
   calcFilament();
 }
 
-loadPricesFromGAS().then(() => init());
-
-// 教員モードは ?teacher 付きURLでのみ利用可能（モード切替スイッチを表示）。
-// 通常URL（生徒向け）には切替スイッチ自体が出ないため、誤って教員モードを開くことはない。
-(function() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('teacher')) {
-    document.getElementById('modeSwitcher').style.display = 'flex';
+// 単価読み込み後に初期化。?teacher 付きURLならそのまま教員モードで起動する。
+// 通常URL（生徒向け）は常に利用者画面のみ表示されるため、誤って教員モードに入ることはない。
+loadPricesFromGAS().then(() => {
+  init();
+  if (new URLSearchParams(window.location.search).has('teacher')) {
+    setMode('teacher');
   }
-})();
+});
 
 // モード切替
 function setMode(mode) {
@@ -2048,8 +2015,6 @@ function setMode(mode) {
   document.getElementById('studentMode').style.display = isTeacher ? 'none' : 'block';
   document.getElementById('itemsListCard').style.display = isTeacher ? 'none' : 'block';
   document.getElementById('submitCard').style.display = isTeacher ? 'none' : 'block';
-  document.getElementById('btnStudent').classList.toggle('active', !isTeacher);
-  document.getElementById('btnTeacher').classList.toggle('active', isTeacher);
   if (isTeacher) renderPriceEditList();
 }
 
