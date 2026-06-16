@@ -1810,6 +1810,29 @@ function addFilamentItem() {
 // リスト描画
 function roundTotal(n) { return Math.round(n / 10) * 10; }
 
+// XSS対策：innerHTMLに埋め込む前にHTML特殊文字をエスケープする
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// 二重承認防止：承認済み依頼IDをこのブラウザに記録する
+const APPROVED_KEY = 'approvedRequestIds';
+function getApprovedIds() {
+  try { return JSON.parse(localStorage.getItem(APPROVED_KEY)) || []; } catch(e) { return []; }
+}
+function isApprovedId(id) { return !!id && getApprovedIds().includes(id); }
+function markApprovedId(id) {
+  if (!id) return;
+  const ids = getApprovedIds();
+  if (!ids.includes(id)) { ids.push(id); localStorage.setItem(APPROVED_KEY, JSON.stringify(ids)); }
+}
+
+
 function renderList() {
   const list = document.getElementById('itemsList');
   const total = roundTotal(items.reduce((s, i) => s + i.price, 0));
@@ -1820,8 +1843,8 @@ function renderList() {
     list.innerHTML = items.map((item, idx) => `
       <div class="item-row">
         <div class="item-info">
-          <div class="item-name">${item.type === 'wood' ? '🪵' : item.type === 'filament' ? '🔵' : '📦'} ${item.name}</div>
-          <div class="item-detail">${item.detail}</div>
+          <div class="item-name">${item.type === 'wood' ? '🪵' : item.type === 'filament' ? '🔵' : '📦'} ${escapeHtml(item.name)}</div>
+          <div class="item-detail">${escapeHtml(item.detail)}</div>
         </div>
         <div class="item-price">${item.price.toLocaleString()} 円</div>
         <button class="remove-btn" onclick="removeItem(${idx})">✕</button>
@@ -1946,16 +1969,16 @@ function showConfirm() {
 
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-row"><span class="m-label">区分</span><span class="m-val">${isStudent ? '学生' : 'その他（教職員等）'}</span></div>
-    ${isStudent ? `<div class="modal-row"><span class="m-label">学籍番号</span><span class="m-val">${id}</span></div>` : ''}
-    <div class="modal-row"><span class="m-label">氏名</span><span class="m-val">${name}</span></div>
+    ${isStudent ? `<div class="modal-row"><span class="m-label">学籍番号</span><span class="m-val">${escapeHtml(id)}</span></div>` : ''}
+    <div class="modal-row"><span class="m-label">氏名</span><span class="m-val">${escapeHtml(name)}</span></div>
     <div style="margin:12px 0 8px; font-size:0.85rem; font-weight:700; color:#718096;">材料リスト</div>
     ${items.map(i => `
       <div class="modal-row">
-        <span class="m-label">${i.type === 'wood' ? '🪵' : i.type === 'filament' ? '🔵' : '📦'} ${i.name}（${i.detail}）</span>
+        <span class="m-label">${i.type === 'wood' ? '🪵' : i.type === 'filament' ? '🔵' : '📦'} ${escapeHtml(i.name)}（${escapeHtml(i.detail)}）</span>
         <span class="m-val">${i.price.toLocaleString()} 円</span>
       </div>
     `).join('')}
-    ${notes ? `<div class="modal-row"><span class="m-label">備考</span><span class="m-val">${notes}</span></div>` : ''}
+    ${notes ? `<div class="modal-row"><span class="m-label">備考</span><span class="m-val">${escapeHtml(notes)}</span></div>` : ''}
     <div class="modal-total"><span>合計</span><span>${total.toLocaleString()} 円</span></div>
   `;
   document.getElementById('modalOverlay').classList.add('show');
@@ -2165,8 +2188,8 @@ function renderTeacherList() {
     list.innerHTML = tItems.map((item,idx) => `
       <div class="item-row">
         <div class="item-info">
-          <div class="item-name">${item.type==='wood'?'🪵':item.type==='filament'?'🔵':'📦'} ${item.name}</div>
-          <div class="item-detail">${item.detail}</div>
+          <div class="item-name">${item.type==='wood'?'🪵':item.type==='filament'?'🔵':'📦'} ${escapeHtml(item.name)}</div>
+          <div class="item-detail">${escapeHtml(item.detail)}</div>
         </div>
         <div class="item-price">${item.price.toLocaleString()} 円</div>
         <button class="remove-btn" onclick="removeTeacherItem(${idx})">✕</button>
@@ -2202,6 +2225,8 @@ function loadFromURL() {
       const restored = rParam.replace(/\./g, '+').replace(/_/g, '$');
       const req = JSON.parse(LZString.decompressFromEncodedURIComponent(restored));
       req.status = req.status || 'pending';
+      // この依頼が既にこのブラウザで承認済みなら、承認済み状態で復元（二重承認・重複送信を防ぐ）
+      if (isApprovedId(req.id)) { req.status = 'approved'; req._justApproved = true; }
       pendingRequests.push(req);
     } catch(e) {
       console.warn('URL r parse failed', e);
@@ -2210,6 +2235,7 @@ function loadFromURL() {
     try {
       const req = JSON.parse(decodeURIComponent(atob(reqParam)));
       req.status = req.status || 'pending';
+      if (isApprovedId(req.id)) { req.status = 'approved'; req._justApproved = true; }
       pendingRequests.push(req);
     } catch(e) {
       console.warn('URL req parse failed', e);
@@ -2274,7 +2300,7 @@ function openTeamsWithURL() {
 
 // メッセージをHTML（クリック可能なリンク文字列）でコピー。非対応環境ではプレーンURLにフォールバック
 async function copyTeamsMessage(url, studentName) {
-  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const esc = escapeHtml;
   const linkText = '材料費を確認する（クリック）';
   const plain = '【材料費確認依頼】\n' + studentName + 'さん、下のリンクから材料費の確認をお願いします。\n' + url;
   const html = '<p>【材料費確認依頼】<br>' + esc(studentName) +
@@ -2324,18 +2350,18 @@ function renderPendingList() {
     return `
       <div class="pending-item">
         <div class="pending-item-header">
-          <span class="pending-teacher">👩‍🏫 ${req.teacher} より</span>
-          <span class="pending-date">${req.date}</span>
+          <span class="pending-teacher">👩‍🏫 ${escapeHtml(req.teacher)} より</span>
+          <span class="pending-date">${escapeHtml(req.date)}</span>
         </div>
         <div class="pending-materials">
           ${req.materials.map(m => `
             <div class="pending-mat-row">
-              <span>${m.type==='wood'?'🪵':'🔵'} ${m.name}（${m.detail}）</span>
+              <span>${m.type==='wood'?'🪵':'🔵'} ${escapeHtml(m.name)}（${escapeHtml(m.detail)}）</span>
               <span style="font-weight:700;">${m.price.toLocaleString()} 円</span>
             </div>
           `).join('')}
         </div>
-        ${req.notes ? `<div class="pending-notes">📝 ${req.notes}</div>` : ''}
+        ${req.notes ? `<div class="pending-notes">📝 ${escapeHtml(req.notes)}</div>` : ''}
         <div class="pending-total">
           <span>合計</span>
           <span>${total.toLocaleString()} 円</span>
@@ -2371,6 +2397,14 @@ function approveRequest(reqId) {
   const req = pendingRequests.find(r => r.id === reqId);
   if (!req) return;
 
+  // 二重承認・重複送信を防止（このブラウザで既に承認済み、またはメモリ上で承認済みなら何もしない）
+  if (req.status === 'approved' || isApprovedId(reqId)) {
+    req.status = 'approved';
+    req._justApproved = true;
+    renderPendingList();
+    return;
+  }
+
   const paymentDateInput = document.getElementById('paymentDate-' + reqId);
   const paymentDate = paymentDateInput ? paymentDateInput.value : '';
 
@@ -2400,6 +2434,7 @@ function approveRequest(reqId) {
 
   req.status = 'approved';
   req._justApproved = true;
+  markApprovedId(reqId); // 承認済みを永続化（リロード後の再承認・重複送信を防ぐ）
   renderPendingList();
 }
 
@@ -2430,10 +2465,10 @@ function renderPriceEditList() {
   });
   const allCats = [...catOrder, ...Object.keys(grouped).filter(c2 => !catOrder.includes(c2))];
   woodList.innerHTML = allCats.filter(cat => grouped[cat]?.length).map(cat => `
-    <div style="margin-top:10px;font-size:0.78rem;font-weight:700;color:#718096;padding:2px 4px;border-bottom:1px solid #e2e8f0;">${cat}</div>
+    <div style="margin-top:10px;font-size:0.78rem;font-weight:700;color:#718096;padding:2px 4px;border-bottom:1px solid #e2e8f0;">${escapeHtml(cat)}</div>
     ${grouped[cat].map(w => `
       <div class="price-edit-row">
-        <span class="pe-name">${w.name}</span>
+        <span class="pe-name">${escapeHtml(w.name)}</span>
         <select style="font-size:0.75rem;padding:4px;border:1px solid #cbd5e0;border-radius:6px;" onchange="WOOD_PRICES[${w._idx}].category=this.value;renderPriceEditList();rebuildSelects();">
           ${['無垢材','合板','その他材料'].map(cat2=>`<option value="${cat2}"${cat2===w.category?' selected':''}>
             ${cat2}</option>`).join('')}
@@ -2449,7 +2484,7 @@ function renderPriceEditList() {
   const filList = document.getElementById('filamentPriceList');
   filList.innerHTML = FILAMENT_PRICES.map((f, i) => `
     <div class="price-edit-row">
-      <span class="pe-name">${f.name}</span>
+      <span class="pe-name">${escapeHtml(f.name)}</span>
       <input type="number" value="${f.pricePerG}" min="0" step="0.1" onchange="FILAMENT_PRICES[${i}].pricePerG = parseFloat(this.value)||0">
       <span class="pe-unit">円/g</span>
       <button class="remove-btn" onclick="removeFilamentPrice(${i})" title="削除">✕</button>
@@ -2462,7 +2497,7 @@ function renderPriceEditList() {
       ? '<div style="color:#a0aec0;font-size:0.85rem;padding:12px 4px;">プリセットはまだありません。上のフォームから追加してください。</div>'
       : OTHER_PRICES.map((o, i) => `
         <div class="price-edit-row">
-          <span class="pe-name">${o.name}</span>
+          <span class="pe-name">${escapeHtml(o.name)}</span>
           <input type="number" value="${o.price}" min="0" onchange="OTHER_PRICES[${i}].price=parseInt(this.value)||0">
           <span class="pe-unit">円</span>
           <button class="remove-btn" onclick="removeOtherPrice(${i})" title="削除">✕</button>
