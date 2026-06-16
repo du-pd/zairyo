@@ -900,11 +900,11 @@
       <div class="form-group" style="margin-bottom:16px;">
         <label>寸法（縦 × 横 × 厚み）<span class="unit-note">mm</span></label>
         <div class="dim-inputs">
-          <input type="number" id="tWoodL" placeholder="縦" oninput="calcTeacherWood()">
+          <input type="number" id="tWoodL" placeholder="縦" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="tWoodW" placeholder="横" oninput="calcTeacherWood()">
+          <input type="number" id="tWoodW" placeholder="横" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="tWoodH" placeholder="厚み" oninput="calcTeacherWood()">
+          <input type="number" id="tWoodH" placeholder="厚み" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">mm</span>
         </div>
         <div class="mm-warning">⚠ 単位は mm です。cm と間違えないよう注意してください（例：150cm → 1500mm）</div>
@@ -990,7 +990,7 @@
     <div id="tUrlArea" style="display:none; margin-top:14px;">
       <div style="font-size:0.85rem; color:#2b6cb0; font-weight:700; margin-bottom:8px;">📋 このURLを学生に送ってください</div>
       <div style="display:flex; gap:8px; align-items:center;">
-        <input type="text" id="tGeneratedUrl" readonly style="flex:1; font-size:0.75rem; background:#ebf8ff; border:1.5px solid #90cdf4; border-radius:8px; padding:8px 10px; color:#2c5282; min-width:0;">
+        <input type="text" id="tGeneratedUrl" readonly style="flex:1; font-size:0.85rem; background:#ebf8ff; border:1.5px solid #90cdf4; border-radius:8px; padding:8px 10px; color:#2c5282; min-width:0;">
         <button onclick="copyRequestURL()" style="background:#3182ce; color:white; border:none; border-radius:8px; padding:10px 14px; font-weight:700; cursor:pointer; font-size:0.85rem; white-space:nowrap; flex-shrink:0;">コピー</button>
       </div>
       <button onclick="openTeamsWithURL()" style="margin-top:10px; width:100%; background:#5058c8; color:white; border:none; border-radius:10px; padding:13px; font-weight:700; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
@@ -1030,15 +1030,15 @@
         <div class="purchase-calc-row">
           <div class="form-group" style="min-width:100px; flex:none;">
             <label>縦 mm</label>
-            <input type="number" id="pcWoodL" placeholder="例：2000" oninput="calcPurchaseWood()">
+            <input type="number" id="pcWoodL" placeholder="例：2000" min="0" oninput="calcPurchaseWood()">
           </div>
           <div class="form-group" style="min-width:100px; flex:none;">
             <label>横 mm</label>
-            <input type="number" id="pcWoodW" placeholder="例：150" oninput="calcPurchaseWood()">
+            <input type="number" id="pcWoodW" placeholder="例：150" min="0" oninput="calcPurchaseWood()">
           </div>
           <div class="form-group" style="min-width:100px; flex:none;">
             <label>厚み mm</label>
-            <input type="number" id="pcWoodH" placeholder="例：30" oninput="calcPurchaseWood()">
+            <input type="number" id="pcWoodH" placeholder="例：30" min="0" oninput="calcPurchaseWood()">
           </div>
           <div class="form-group" style="min-width:70px; flex:none;">
             <label>本数</label>
@@ -1046,7 +1046,7 @@
           </div>
           <div class="form-group" style="min-width:130px; flex:none;">
             <label>購入金額 円</label>
-            <input type="number" id="pcWoodCost" placeholder="例：12000" oninput="calcPurchaseWood()">
+            <input type="number" id="pcWoodCost" placeholder="例：12000" min="0" oninput="calcPurchaseWood()">
           </div>
         </div>
 
@@ -1188,11 +1188,11 @@
       <div class="form-group" style="margin-bottom:16px;">
         <label>寸法（縦 × 横 × 厚み）<span class="unit-note">単位：mm</span></label>
         <div class="dim-inputs">
-          <input type="number" id="woodL" placeholder="縦" oninput="calcWood()">
+          <input type="number" id="woodL" placeholder="縦" min="0" oninput="calcWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="woodW" placeholder="横" oninput="calcWood()">
+          <input type="number" id="woodW" placeholder="横" min="0" oninput="calcWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="woodH" placeholder="厚み" oninput="calcWood()">
+          <input type="number" id="woodH" placeholder="厚み" min="0" oninput="calcWood()">
           <span class="dim-sep">mm</span>
         </div>
         <div class="mm-warning">⚠ 単位は mm です。cm と間違えないよう注意してください（例：150cm → 1500mm）</div>
@@ -1658,7 +1658,7 @@ function calcWood() {
   const L = parseFloat(document.getElementById('woodL').value) || 0;
   const W = parseFloat(document.getElementById('woodW').value) || 0;
   const H = parseFloat(document.getElementById('woodH').value) || 0;
-  const qty = parseInt(document.getElementById('woodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('woodQty').value) || 1);
   const pricePerM3 = parseFloat(species.value) || 0;
   const speciesName = species.options[species.selectedIndex]?.text || '';
 
@@ -1666,7 +1666,7 @@ function calcWood() {
   const detailEl = document.getElementById('woodCalcDetail');
   const addBtn = document.getElementById('addWoodBtn');
 
-  if (!pricePerM3 || !L || !W || !H) {
+  if (!pricePerM3 || L <= 0 || W <= 0 || H <= 0) {
     amountEl.className = 'amount zero';
     amountEl.innerHTML = '— <span>円</span>';
     detailEl.textContent = '材料・寸法を入力すると金額が表示されます';
@@ -1700,7 +1700,7 @@ function calcFilament() {
   const detailEl = document.getElementById('filamentCalcDetail');
   const addBtn = document.getElementById('addFilamentBtn');
 
-  if (!pricePerG || !weight) {
+  if (!pricePerG || weight <= 0) {
     amountEl.className = 'amount zero';
     amountEl.innerHTML = '— <span>円</span>';
     detailEl.textContent = '種類・使用量を入力すると金額が表示されます';
@@ -1724,7 +1724,7 @@ function addWoodItem() {
   const L = parseFloat(document.getElementById('woodL').value);
   const W = parseFloat(document.getElementById('woodW').value);
   const H = parseFloat(document.getElementById('woodH').value);
-  const qty = parseInt(document.getElementById('woodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('woodQty').value) || 1);
   const speciesName = species.options[species.selectedIndex].text;
 
   items.push({ type: 'wood', name: speciesName, detail: `${L}×${W}×${H}mm × ${qty}本`, price: woodCalcPrice });
@@ -1761,11 +1761,11 @@ let otherCalcPrice = 0;
 function calcOther() {
   const name = document.getElementById('otherName').value.trim();
   const price = parseFloat(document.getElementById('otherPrice').value) || 0;
-  const qty = parseInt(document.getElementById('otherQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('otherQty').value) || 1);
   const amountEl = document.getElementById('otherAmount');
   const detailEl = document.getElementById('otherCalcDetail');
   const addBtn = document.getElementById('addOtherBtn');
-  if (!name || !price) {
+  if (!name || price <= 0) {
     amountEl.className = 'amount zero';
     amountEl.innerHTML = '— <span>円</span>';
     detailEl.textContent = '品名と単価を入力すると金額が表示されます';
@@ -1784,7 +1784,7 @@ function calcOther() {
 function addOtherItem() {
   const name = document.getElementById('otherName').value.trim();
   const price = parseFloat(document.getElementById('otherPrice').value) || 0;
-  const qty = parseInt(document.getElementById('otherQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('otherQty').value) || 1);
   items.push({ type: 'other', name, detail: `${qty}点 × ¥${price.toLocaleString()}`, price: otherCalcPrice });
   renderList();
   document.getElementById('otherName').value = '';
@@ -1901,10 +1901,10 @@ function updateCompareResult() {
   const L = parseFloat(document.getElementById('woodL').value) || 0;
   const W = parseFloat(document.getElementById('woodW').value) || 0;
   const H = parseFloat(document.getElementById('woodH').value) || 0;
-  const qty = parseInt(document.getElementById('woodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('woodQty').value) || 1);
   const resultEl = document.getElementById('compareResult');
 
-  if (!L || !W || !H) {
+  if (L <= 0 || W <= 0 || H <= 0) {
     resultEl.innerHTML = '<p style="font-size:0.85rem;color:#a0aec0;text-align:center;padding:8px;">上で寸法を入力してから比較できます</p>';
     return;
   }
@@ -2077,11 +2077,11 @@ let tOtherPrice = 0;
 function calcTeacherOther() {
   const name = document.getElementById('tOtherName').value.trim();
   const price = parseFloat(document.getElementById('tOtherPrice').value) || 0;
-  const qty = parseInt(document.getElementById('tOtherQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('tOtherQty').value) || 1);
   const amountEl = document.getElementById('tOtherAmount');
   const detailEl = document.getElementById('tOtherDetail');
   const addBtn = document.getElementById('tAddOtherBtn');
-  if (!name || !price) {
+  if (!name || price <= 0) {
     amountEl.className = 'amount zero';
     amountEl.innerHTML = '— <span>円</span>';
     detailEl.textContent = '品名と単価を入力すると金額が表示されます';
@@ -2099,7 +2099,7 @@ function calcTeacherOther() {
 function addTeacherOther() {
   const name = document.getElementById('tOtherName').value.trim();
   const price = parseFloat(document.getElementById('tOtherPrice').value) || 0;
-  const qty = parseInt(document.getElementById('tOtherQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('tOtherQty').value) || 1);
   tItems.push({ type: 'other', name, detail: `${qty}点 × ¥${price.toLocaleString()}`, price: tOtherPrice });
   renderTeacherList();
   document.getElementById('tOtherName').value = '';
@@ -2113,11 +2113,11 @@ function calcTeacherWood() {
   const L = parseFloat(document.getElementById('tWoodL').value) || 0;
   const W = parseFloat(document.getElementById('tWoodW').value) || 0;
   const H = parseFloat(document.getElementById('tWoodH').value) || 0;
-  const qty = parseInt(document.getElementById('tWoodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('tWoodQty').value) || 1);
   const pricePerM3 = parseFloat(species.value) || 0;
   const speciesName = species.options[species.selectedIndex]?.text || '';
 
-  if (!pricePerM3 || !L || !W || !H) {
+  if (!pricePerM3 || L <= 0 || W <= 0 || H <= 0) {
     document.getElementById('tWoodAmount').className = 'amount zero';
     document.getElementById('tWoodAmount').innerHTML = '— <span>円</span>';
     document.getElementById('tWoodDetail').textContent = '材料・寸法を入力すると金額が表示されます';
@@ -2138,7 +2138,7 @@ function calcTeacherFilament() {
   const pricePerG = parseFloat(fType.value) || 0;
   const typeName = fType.options[fType.selectedIndex]?.text || '';
 
-  if (!pricePerG || !weight) {
+  if (!pricePerG || weight <= 0) {
     document.getElementById('tFilamentAmount').className = 'amount zero';
     document.getElementById('tFilamentAmount').innerHTML = '— <span>円</span>';
     document.getElementById('tFilamentDetail').textContent = '種類・使用量を入力すると金額が表示されます';
@@ -2158,7 +2158,7 @@ function addTeacherWood() {
   const L = parseFloat(document.getElementById('tWoodL').value);
   const W = parseFloat(document.getElementById('tWoodW').value);
   const H = parseFloat(document.getElementById('tWoodH').value);
-  const qty = parseInt(document.getElementById('tWoodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('tWoodQty').value) || 1);
   tItems.push({ type:'wood', name: species.options[species.selectedIndex].text, detail:`${L}×${W}×${H}mm × ${qty}本`, price: tWoodPrice });
   renderTeacherList();
   document.getElementById('tWoodL').value = '';
@@ -2356,7 +2356,7 @@ function renderPendingList() {
         <div class="pending-materials">
           ${req.materials.map(m => `
             <div class="pending-mat-row">
-              <span>${m.type==='wood'?'🪵':'🔵'} ${escapeHtml(m.name)}（${escapeHtml(m.detail)}）</span>
+              <span>${m.type==='wood'?'🪵':m.type==='filament'?'🔵':'📦'} ${escapeHtml(m.name)}（${escapeHtml(m.detail)}）</span>
               <span style="font-weight:700;">${m.price.toLocaleString()} 円</span>
             </div>
           `).join('')}
@@ -2407,13 +2407,7 @@ function approveRequest(reqId) {
 
   const paymentDateInput = document.getElementById('paymentDate-' + reqId);
   const paymentDate = paymentDateInput ? paymentDateInput.value : '';
-
-  const materialText = req.materials.map(m =>
-    `${m.type === 'wood' ? '木材' : m.type === 'filament' ? 'フィラメント' : 'その他'}: ${m.name}（${m.detail}）¥${m.price.toLocaleString()}`
-  ).join(' / ');
   const total = roundTotal(req.materials.reduce((s, m) => s + m.price, 0));
-
-  const notesWithDate = req.notes || '';
 
   // GASへ承認記録を送信
   fetch(GAS_URL, {
@@ -2427,7 +2421,7 @@ function approveRequest(reqId) {
       materials: req.materials,
       totalAmount: total,
       payDate: paymentDate,
-      notes: notesWithDate,
+      notes: req.notes || '',
       teacherName: req.teacher || '',
     }),
   }).catch(e => console.warn('GAS送信エラー', e));
@@ -2639,18 +2633,18 @@ function calcPurchaseWood() {
   const L = parseFloat(document.getElementById('pcWoodL').value) || 0;
   const W = parseFloat(document.getElementById('pcWoodW').value) || 0;
   const H = parseFloat(document.getElementById('pcWoodH').value) || 0;
-  const qty = parseInt(document.getElementById('pcWoodQty').value) || 1;
+  const qty = Math.max(1, parseInt(document.getElementById('pcWoodQty').value) || 1);
   const cost = parseFloat(document.getElementById('pcWoodCost').value) || 0;
   const resultEl = document.getElementById('pcWoodResult');
 
-  if (!L || !W || !H) {
+  if (L <= 0 || W <= 0 || H <= 0) {
     resultEl.innerHTML = '<span class="pc-hint">寸法・本数・購入金額を入力すると計算されます</span>';
     return;
   }
 
   const volM3 = (L/1000) * (W/1000) * (H/1000) * qty;
 
-  if (!cost) {
+  if (cost <= 0) {
     resultEl.innerHTML = `
       <div class="pc-result-text">
         体積：<strong>${volM3.toFixed(4)} m³</strong>（${qty}本）<br>
@@ -2684,7 +2678,7 @@ function calcPurchaseFilament() {
   const cost = parseFloat(document.getElementById('pcFilamentCost').value) || 0;
   const resultEl = document.getElementById('pcFilamentResult');
 
-  if (!weight || !cost) {
+  if (weight <= 0 || cost <= 0) {
     resultEl.innerHTML = '<span class="pc-hint">購入量と金額を入力すると計算されます</span>';
     return;
   }
