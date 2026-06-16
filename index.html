@@ -2031,13 +2031,12 @@ function resetAll() {
 
 loadPricesFromGAS().then(() => init());
 
-// URLパラメータで教員モード判定（PIN保護）
+// 教員モードは ?teacher 付きURLでのみ利用可能（モード切替スイッチを表示）。
+// 通常URL（生徒向け）には切替スイッチ自体が出ないため、誤って教員モードを開くことはない。
 (function() {
   const params = new URLSearchParams(window.location.search);
   if (params.has('teacher')) {
     document.getElementById('modeSwitcher').style.display = 'flex';
-    createPinModal();
-    showTeacherPinDialog();
   }
 })();
 
@@ -2699,64 +2698,6 @@ function calcPurchaseFilament() {
 function applyFilamentPurchasePrice(price) {
   document.getElementById('newFilamentPrice').value = price;
   document.getElementById('newFilamentName').focus();
-}
-
-// =====================
-// 教員モードPIN保護
-// =====================
-const TEACHER_PIN = '1234'; // ← 必要に応じて変更してください
-
-function createPinModal() {
-  if (document.getElementById('teacherPinOverlay')) return;
-  const overlay = document.createElement('div');
-  overlay.id = 'teacherPinOverlay';
-  overlay.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;';
-  overlay.innerHTML = `
-    <div style="background:white;border-radius:20px;padding:36px 32px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <div style="font-size:2.4rem;margin-bottom:8px;">🔐</div>
-      <h3 style="margin:0 0 6px;font-size:1.1rem;color:#2d3748;">教員モード</h3>
-      <p style="font-size:0.83rem;color:#718096;margin-bottom:20px;">PINを入力してください</p>
-      <input type="password" id="teacherPinInput"
-        style="width:100%;border:2px solid #e2e8f0;border-radius:10px;padding:12px;font-size:1.4rem;text-align:center;letter-spacing:6px;box-sizing:border-box;outline:none;"
-        placeholder="••••" maxlength="8"
-        onkeydown="if(event.key==='Enter')checkTeacherPin()"
-        oninput="document.getElementById('teacherPinError').style.display='none';document.getElementById('teacherPinInput').style.borderColor='#e2e8f0';">
-      <div id="teacherPinError" style="color:#e53e3e;font-size:0.82rem;margin-top:8px;display:none;">PINが違います</div>
-      <button onclick="checkTeacherPin()" style="margin-top:18px;background:#667eea;color:white;border:none;border-radius:10px;padding:12px 0;font-size:1rem;cursor:pointer;width:100%;font-weight:700;">確認</button>
-      <button onclick="cancelTeacherPin()" style="margin-top:10px;background:none;border:none;color:#a0aec0;font-size:0.85rem;cursor:pointer;width:100%;">キャンセル</button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-}
-
-function showTeacherPinDialog() {
-  const overlay = document.getElementById('teacherPinOverlay');
-  if (overlay) {
-    overlay.style.display = 'flex';
-    setTimeout(() => {
-      const input = document.getElementById('teacherPinInput');
-      if (input) { input.value = ''; input.focus(); }
-    }, 150);
-  }
-}
-
-function checkTeacherPin() {
-  const input = document.getElementById('teacherPinInput');
-  if (!input) return;
-  if (input.value === TEACHER_PIN) {
-    document.getElementById('teacherPinOverlay').style.display = 'none';
-    setMode('teacher');
-  } else {
-    document.getElementById('teacherPinError').style.display = 'block';
-    input.style.borderColor = '#e53e3e';
-    input.value = '';
-    input.focus();
-  }
-}
-
-function cancelTeacherPin() {
-  document.getElementById('teacherPinOverlay').style.display = 'none';
-  history.replaceState(null, '', window.location.pathname);
 }
 </script>
 </body>
