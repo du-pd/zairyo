@@ -2038,12 +2038,17 @@ document.addEventListener('input', function(e) {
   if (conv !== el.value) el.value = conv;
 }, true);
 
-// 単価読み込み後に初期化。?teacher 付きURLならそのまま教員モードで起動する。
-// 通常URL（生徒向け）は常に利用者画面のみ表示されるため、誤って教員モードに入ることはない。
+// 画面はすぐ表示する。?teacher 付きURLなら通信を待たず即座に教員モードで起動。
+// （単価マスタは初期値で先に描画し、GAS取得後に最新へ差し替える）
+init();
+if (new URLSearchParams(window.location.search).has('teacher')) {
+  setMode('teacher');
+}
+// 単価マスタは非同期で読み込み、取得できたら画面へ反映する
 loadPricesFromGAS().then(() => {
-  init();
-  if (new URLSearchParams(window.location.search).has('teacher')) {
-    setMode('teacher');
+  rebuildSelects();
+  if (document.getElementById('priceEditCard').style.display === 'block') {
+    renderPriceEditList();
   }
 });
 
