@@ -1,0 +1,13 @@
+{
+  "name": "材料費計算システム（教員用）",
+  "short_name": "材料費（教員）",
+  "start_url": "./?teacher",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#d69e2e",
+  "icons": [
+    { "src": "icon-teacher.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-teacher.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }
+  ]
+}
