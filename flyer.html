@@ -67,7 +67,7 @@
     margin-top: 16px; display: flex; gap: 20px; align-items: center;
     border: 2px dashed var(--gold); border-radius: 14px; padding: 16px 18px; background: #fffdf6;
   }
-  .qr-box { flex-shrink: 0; width: 150px; height: 150px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
+  .qr-box { flex-shrink: 0; width: 46mm; height: 46mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
   .qr-box svg { width: 100%; height: 100%; display: block; }
   .qr-text h2 { font-size: 1.15rem; color: var(--gold); margin-bottom: 6px; }
   .qr-text p { font-size: 0.95rem; line-height: 1.7; color: var(--ink); }
@@ -362,7 +362,7 @@ var qrcode = (function() {
   }
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" shape-rendering="crispEdges">' +
             '<rect width="' + size + '" height="' + size + '" fill="#ffffff"/>' +
-            '<g fill="#1a202c">' + rects + '</g></svg>';
+            '<g fill="#000000">' + rects + '</g></svg>';
   document.getElementById('qr').innerHTML = svg;
 })();
 </script>
