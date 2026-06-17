@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>材料費計算システム ご案内（チラシ）</title>
+<style>
+  :root {
+    --navy: #2b4c7e;
+    --navy-d: #1a365d;
+    --gold: #d69e2e;
+    --ink: #2d3748;
+    --muted: #5a6678;
+    --line: #e2e8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+    color: var(--ink);
+    background: #e9eef4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ===== 印刷バー（画面のみ） ===== */
+  .toolbar {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; font-size: 0.9rem;
+  }
+  .toolbar button {
+    background: var(--gold); color: #fff; border: none; border-radius: 8px;
+    padding: 8px 18px; font-weight: 700; font-size: 0.95rem; cursor: pointer; font-family: inherit;
+  }
+
+  /* ===== A4用紙 ===== */
+  .page {
+    width: 210mm; min-height: 297mm;
+    margin: 16px auto; background: #fff;
+    padding: 14mm 14mm 12mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column;
+  }
+
+  /* ヘッダー */
+  .head {
+    display: flex; align-items: center; gap: 14px;
+    border-bottom: 4px solid var(--navy); padding-bottom: 12px;
+  }
+  .head .logo {
+    width: 64px; height: 64px; border-radius: 14px; flex-shrink: 0;
+    background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .head h1 { font-size: 1.7rem; color: var(--navy); letter-spacing: 0.02em; }
+  .head p { font-size: 0.95rem; color: var(--muted); margin-top: 3px; }
+
+  /* リード文 */
+  .lead {
+    margin-top: 14px; background: #f2f6fb; border-left: 5px solid var(--navy);
+    border-radius: 8px; padding: 12px 16px; font-size: 1rem; line-height: 1.7;
+  }
+  .lead b { color: var(--navy); }
+
+  /* QR行 */
+  .qr-row {
+    margin-top: 16px; display: flex; gap: 20px; align-items: center;
+    border: 2px dashed var(--gold); border-radius: 14px; padding: 16px 18px; background: #fffdf6;
+  }
+  .qr-box { flex-shrink: 0; width: 150px; height: 150px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
+  .qr-box svg { width: 100%; height: 100%; display: block; }
+  .qr-text h2 { font-size: 1.15rem; color: var(--gold); margin-bottom: 6px; }
+  .qr-text p { font-size: 0.95rem; line-height: 1.7; color: var(--ink); }
+  .url-pill {
+    display: inline-block; margin-top: 8px; background: var(--navy); color: #fff;
+    font-size: 1.05rem; font-weight: 700; padding: 7px 16px; border-radius: 999px; letter-spacing: 0.02em;
+  }
+
+  /* セクション見出し */
+  .sec { margin-top: 18px; }
+  .sec-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 1.15rem; font-weight: 800; color: #fff; background: var(--navy);
+    padding: 8px 14px; border-radius: 8px;
+  }
+  .sec-title .badge { background: var(--gold); border-radius: 6px; padding: 1px 9px; font-size: 0.95rem; }
+
+  /* ステップ */
+  .steps { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; }
+  .step .num {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--navy); color: #fff; font-weight: 800; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step .body { font-size: 0.95rem; line-height: 1.55; }
+  .step .body b { color: var(--navy); }
+  .hint { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+  /* 登録方法（2カラム） */
+  .install { margin-top: 12px; display: flex; gap: 16px; }
+  .device {
+    flex: 1; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fafcfe;
+  }
+  .device h3 { font-size: 1rem; color: var(--navy); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .device ol { margin-left: 18px; font-size: 0.92rem; line-height: 1.7; }
+  .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 7px; font-weight: 700; color: var(--navy); }
+
+  .note {
+    margin-top: 14px; font-size: 0.85rem; color: var(--muted); line-height: 1.6;
+    border-top: 1px solid var(--line); padding-top: 10px;
+  }
+  .foot { margin-top: auto; padding-top: 12px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+  .foot .big { font-size: 1.05rem; color: var(--navy); font-weight: 800; }
+
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 12mm; }
+  }
+  @page { size: A4 portrait; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <span>🖨️ このページをA4縦で印刷してください（余白「なし」または「既定」推奨）</span>
+  <button onclick="window.print()">印刷する</button>
+</div>
+
+<div class="page">
+
+  <div class="head">
+    <div class="logo">🪵</div>
+    <div>
+      <h1>材料費計算システム</h1>
+      <p>木材・3Dプリンタ用フィラメントなどの材料費を、その場で計算・申請できます</p>
+    </div>
+  </div>
+
+  <div class="lead">
+    実習や課題で使った材料の費用を、<b>スマホやPCから自分で計算</b>できるWebアプリです。
+    寸法や使用量を入れるだけで<b>金額を自動表示</b>。インストール不要、下のQRコードからすぐ使えます。
+  </div>
+
+  <div class="qr-row">
+    <div class="qr-box"><div id="qr"></div></div>
+    <div class="qr-text">
+      <h2>📱 スマホでQRコードを読み取る</h2>
+      <p>カメラアプリでQRを読み取るか、ブラウザに下のアドレスを入力してください。</p>
+      <span class="url-pill">du-pd.github.io/zairyo</span>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="badge">使い方</span> かんたん4ステップ</div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><div class="body"><b>区分と名前を入力</b><div class="hint">学生／学籍番号・氏名を入力します。</div></div></div>
+      <div class="step"><div class="num">2</div><div class="body"><b>材料を選んで寸法を入力</b><div class="hint">「体積計算（木材など）／重さ計算（フィラメント）／その他」のタブから選択。長さ・幅・厚みや使用量を入力すると金額が自動表示されます。</div></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><b>「＋リストに追加」</b><div class="hint">複数の材料を使った場合はくり返し追加。合計金額が下に表示されます。</div></div></div>
+      <div class="step"><div class="num">4</div><div class="body"><b>「内容を確認して申請」</b><div class="hint">確認画面でOKすれば申請完了です。</div></div></div>
+    </div>
+    <div class="hint" style="margin-top:10px;">💡 先生から「確認依頼」のリンクが届いた場合は、リンクを開いて内容を確認し、<b>「OK・承認する」</b>を押してください。</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="badge">登録</span> スマホのホーム画面に追加すると便利！</div>
+    <div class="install">
+      <div class="device">
+        <h3>🍎 iPhone（Safari）</h3>
+        <ol>
+          <li>QRから開く</li>
+          <li>下の<span class="key">共有</span>ボタン（□に↑）をタップ</li>
+          <li><span class="key">ホーム画面に追加</span>を選ぶ</li>
+          <li>右上の<span class="key">追加</span>をタップ</li>
+        </ol>
+      </div>
+      <div class="device">
+        <h3>🤖 Android（Chrome）</h3>
+        <ol>
+          <li>QRから開く</li>
+          <li>右上の<span class="key">⋮</span>メニューをタップ</li>
+          <li><span class="key">ホーム画面に追加</span>を選ぶ</li>
+          <li><span class="key">追加</span>をタップ</li>
+        </ol>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:8px;">📌 ホーム画面に「材料費計算」のアイコンができ、次回からワンタップで開けます。</div>
+  </div>
+
+  <div class="note">
+    ※ 金額は目安です。最終的な請求額は担当の先生が確認のうえ決定します。<br>
+    ※ 単位は <b>mm（ミリメートル）</b> です。cm と間違えないようご注意ください（例：15cm → 150mm）。
+  </div>
+
+  <div class="foot">
+    困ったときは担当の先生・技術職員までお問い合わせください<br>
+    <span class="big">du-pd.github.io/zairyo</span>
+  </div>
+
+</div>
+
+<script>
+// ===== QRコード生成（qrcode-generator / Kazuhiko Arase, MIT。バイトモード）=====
+var qrcode = (function() {
+  var QRMode = { MODE_8BIT_BYTE: 1 << 2 };
+  var QRErrorCorrectLevel = { L: 1, M: 0, Q: 3, H: 2 };
+  var QRMaskPattern = { PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7 };
+  var QRMath = (function() {
+    var EXP_TABLE = new Array(256); var LOG_TABLE = new Array(256);
+    for (var i=0;i<8;i+=1) EXP_TABLE[i]=1<<i;
+    for (var i=8;i<256;i+=1) EXP_TABLE[i]=EXP_TABLE[i-4]^EXP_TABLE[i-5]^EXP_TABLE[i-6]^EXP_TABLE[i-8];
+    for (var i=0;i<255;i+=1) LOG_TABLE[EXP_TABLE[i]]=i;
+    return { glog:function(n){ if(n<1) throw new Error('glog('+n+')'); return LOG_TABLE[n]; },
+             gexp:function(n){ while(n<0)n+=255; while(n>=256)n-=255; return EXP_TABLE[n]; } };
+  })();
+  function QRPolynomial(num, shift){ if(num.length===undefined) throw new Error(num.length+'/'+shift);
+    var offset=0; while(offset<num.length&&num[offset]===0) offset+=1;
+    this.num=new Array(num.length-offset+shift);
+    for(var i=0;i<num.length-offset;i+=1) this.num[i]=num[i+offset]; }
+  QRPolynomial.prototype={ get:function(i){return this.num[i];}, getLength:function(){return this.num.length;},
+    multiply:function(e){ var num=new Array(this.getLength()+e.getLength()-1); for(var i=0;i<num.length;i+=1)num[i]=0;
+      for(var i=0;i<this.getLength();i+=1) for(var j=0;j<e.getLength();j+=1) num[i+j]^=QRMath.gexp(QRMath.glog(this.get(i))+QRMath.glog(e.get(j)));
+      return new QRPolynomial(num,0); },
+    mod:function(e){ if(this.getLength()-e.getLength()<0) return this;
+      var ratio=QRMath.glog(this.get(0))-QRMath.glog(e.get(0));
+      var num=new Array(this.getLength()); for(var i=0;i<this.getLength();i+=1) num[i]=this.get(i);
+      for(var i=0;i<e.getLength();i+=1) num[i]^=QRMath.gexp(QRMath.glog(e.get(i))+ratio);
+      return new QRPolynomial(num,0).mod(e); } };
+  var QRRSBlock=(function(){
+    var T=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],
+      [1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],
+      [1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],
+      [2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],
+      [2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16]];
+    function B(t,d){ this.totalCount=t; this.dataCount=d; }
+    function tbl(tn,ec){ switch(ec){ case 1:return T[(tn-1)*4+0]; case 0:return T[(tn-1)*4+1]; case 3:return T[(tn-1)*4+2]; case 2:return T[(tn-1)*4+3]; default:return undefined; } }
+    B.getRSBlocks=function(tn,ec){ var rb=tbl(tn,ec); if(rb===undefined) throw new Error('bad rs block @'+tn);
+      var len=rb.length/3; var list=[]; for(var i=0;i<len;i+=1){ var c=rb[i*3],t=rb[i*3+1],d=rb[i*3+2]; for(var j=0;j<c;j+=1) list.push(new B(t,d)); } return list; };
+    return B;
+  })();
+  function QRBitBuffer(){ this.buffer=[]; this.length=0; }
+  QRBitBuffer.prototype={ get:function(i){var bi=Math.floor(i/8); return ((this.buffer[bi]>>>(7-i%8))&1)===1;},
+    put:function(num,len){ for(var i=0;i<len;i+=1) this.putBit(((num>>>(len-i-1))&1)===1); },
+    getLengthInBits:function(){return this.length;},
+    putBit:function(bit){ var bi=Math.floor(this.length/8); if(this.buffer.length<=bi) this.buffer.push(0); if(bit) this.buffer[bi]|=(0x80>>>(this.length%8)); this.length+=1; } };
+  function QR8bitByte(data){ this.mode=QRMode.MODE_8BIT_BYTE; var b=[];
+    for(var i=0;i<data.length;i+=1){ var c=data.charCodeAt(i);
+      if(c<0x80) b.push(c);
+      else if(c<0x800){ b.push(0xc0|(c>>6)); b.push(0x80|(c&0x3f)); }
+      else if(c<0xd800||c>=0xe000){ b.push(0xe0|(c>>12)); b.push(0x80|((c>>6)&0x3f)); b.push(0x80|(c&0x3f)); }
+      else { i+=1; var c2=data.charCodeAt(i); var cp=0x10000+(((c&0x3ff)<<10)|(c2&0x3ff));
+        b.push(0xf0|(cp>>18)); b.push(0x80|((cp>>12)&0x3f)); b.push(0x80|((cp>>6)&0x3f)); b.push(0x80|(cp&0x3f)); } }
+    this.data=b; }
+  QR8bitByte.prototype={ getLength:function(){return this.data.length;}, write:function(buf){ for(var i=0;i<this.data.length;i+=1) buf.put(this.data[i],8); } };
+  var QRUtil=(function(){
+    var PP=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],
+      [6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],
+      [6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],
+      [6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],
+      [6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],
+      [6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]];
+    var G15=(1<<10)|(1<<8)|(1<<5)|(1<<4)|(1<<2)|(1<<1)|(1<<0);
+    var G18=(1<<12)|(1<<11)|(1<<10)|(1<<9)|(1<<8)|(1<<5)|(1<<2)|(1<<0);
+    var G15_MASK=(1<<14)|(1<<12)|(1<<10)|(1<<4)|(1<<1);
+    function digit(d){ var n=0; while(d!==0){ n+=1; d>>>=1; } return n; }
+    var U={};
+    U.getBCHTypeInfo=function(data){ var d=data<<10; while(digit(d)-digit(G15)>=0) d^=(G15<<(digit(d)-digit(G15))); return ((data<<10)|d)^G15_MASK; };
+    U.getBCHTypeNumber=function(data){ var d=data<<12; while(digit(d)-digit(G18)>=0) d^=(G18<<(digit(d)-digit(G18))); return (data<<12)|d; };
+    U.getPatternPosition=function(tn){ return PP[tn-1]; };
+    U.getMaskFunction=function(p){ switch(p){
+      case 0:return function(i,j){return (i+j)%2===0;}; case 1:return function(i,j){return i%2===0;};
+      case 2:return function(i,j){return j%3===0;}; case 3:return function(i,j){return (i+j)%3===0;};
+      case 4:return function(i,j){return (Math.floor(i/2)+Math.floor(j/3))%2===0;};
+      case 5:return function(i,j){return (i*j)%2+(i*j)%3===0;};
+      case 6:return function(i,j){return ((i*j)%2+(i*j)%3)%2===0;};
+      case 7:return function(i,j){return ((i*j)%3+(i+j)%2)%2===0;};
+      default: throw new Error('bad mask:'+p); } };
+    U.getErrorCorrectPolynomial=function(len){ var a=new QRPolynomial([1],0); for(var i=0;i<len;i+=1) a=a.multiply(new QRPolynomial([1,QRMath.gexp(i)],0)); return a; };
+    U.getLengthInBits=function(mode,type){ if(1<=type&&type<10) return 8; else if(type<41) return 16; else throw new Error('type:'+type); };
+    U.getLostPoint=function(qr){ var n=qr.getModuleCount(); var lost=0;
+      for(var row=0;row<n;row+=1) for(var col=0;col<n;col+=1){ var same=0; var dark=qr.isDark(row,col);
+        for(var r=-1;r<=1;r+=1){ if(row+r<0||n<=row+r) continue; for(var c=-1;c<=1;c+=1){ if(col+c<0||n<=col+c) continue; if(r===0&&c===0) continue; if(dark===qr.isDark(row+r,col+c)) same+=1; } }
+        if(same>5) lost+=(3+same-5); }
+      for(var row=0;row<n-1;row+=1) for(var col=0;col<n-1;col+=1){ var cnt=0; if(qr.isDark(row,col))cnt+=1; if(qr.isDark(row+1,col))cnt+=1; if(qr.isDark(row,col+1))cnt+=1; if(qr.isDark(row+1,col+1))cnt+=1; if(cnt===0||cnt===4) lost+=3; }
+      for(var row=0;row<n;row+=1) for(var col=0;col<n-6;col+=1){ if(qr.isDark(row,col)&&!qr.isDark(row,col+1)&&qr.isDark(row,col+2)&&qr.isDark(row,col+3)&&qr.isDark(row,col+4)&&!qr.isDark(row,col+5)&&qr.isDark(row,col+6)) lost+=40; }
+      for(var col=0;col<n;col+=1) for(var row=0;row<n-6;row+=1){ if(qr.isDark(row,col)&&!qr.isDark(row+1,col)&&qr.isDark(row+2,col)&&qr.isDark(row+3,col)&&qr.isDark(row+4,col)&&!qr.isDark(row+5,col)&&qr.isDark(row+6,col)) lost+=40; }
+      var dc=0; for(var col=0;col<n;col+=1) for(var row=0;row<n;row+=1) if(qr.isDark(row,col)) dc+=1;
+      var ratio=Math.abs(100*dc/n/n-50)/5; lost+=ratio*10; return lost; };
+    return U;
+  })();
+  function createData(tn,ec,list){ var rs=QRRSBlock.getRSBlocks(tn,ec); var buf=new QRBitBuffer();
+    for(var i=0;i<list.length;i+=1){ var d=list[i]; buf.put(d.mode,4); buf.put(d.getLength(),QRUtil.getLengthInBits(d.mode,tn)); d.write(buf); }
+    var total=0; for(var i=0;i<rs.length;i+=1) total+=rs[i].dataCount;
+    if(buf.getLengthInBits()>total*8) throw new Error('overflow');
+    if(buf.getLengthInBits()+4<=total*8) buf.put(0,4);
+    while(buf.getLengthInBits()%8!==0) buf.putBit(false);
+    while(true){ if(buf.getLengthInBits()>=total*8) break; buf.put(0xEC,8); if(buf.getLengthInBits()>=total*8) break; buf.put(0x11,8); }
+    return createBytes(buf,rs); }
+  function createBytes(buf,rs){ var offset=0,maxDc=0,maxEc=0; var dc=new Array(rs.length),ec=new Array(rs.length);
+    for(var r=0;r<rs.length;r+=1){ var dcc=rs[r].dataCount, ecc=rs[r].totalCount-dcc; maxDc=Math.max(maxDc,dcc); maxEc=Math.max(maxEc,ecc);
+      dc[r]=new Array(dcc); for(var i=0;i<dc[r].length;i+=1) dc[r][i]=0xff&buf.buffer[i+offset]; offset+=dcc;
+      var rsPoly=QRUtil.getErrorCorrectPolynomial(ecc); var raw=new QRPolynomial(dc[r],rsPoly.getLength()-1); var mod=raw.mod(rsPoly);
+      ec[r]=new Array(rsPoly.getLength()-1); for(var i=0;i<ec[r].length;i+=1){ var mi=i+mod.getLength()-ec[r].length; ec[r][i]=(mi>=0)?mod.get(mi):0; } }
+    var totalCount=0; for(var i=0;i<rs.length;i+=1) totalCount+=rs[i].totalCount;
+    var data=new Array(totalCount); var idx=0;
+    for(var i=0;i<maxDc;i+=1) for(var r=0;r<rs.length;r+=1) if(i<dc[r].length){ data[idx]=dc[r][i]; idx+=1; }
+    for(var i=0;i<maxEc;i+=1) for(var r=0;r<rs.length;r+=1) if(i<ec[r].length){ data[idx]=ec[r][i]; idx+=1; }
+    return data; }
+  return function(typeNumber, ecl){
+    var _tn=typeNumber, _ec=QRErrorCorrectLevel[ecl], _mods=null, _n=0, _cache=null, _list=[]; var _this={};
+    var makeImpl=function(test,mask){ _n=_tn*4+17;
+      _mods=(function(c){ var m=new Array(c); for(var row=0;row<c;row+=1){ m[row]=new Array(c); for(var col=0;col<c;col+=1) m[row][col]=null; } return m; })(_n);
+      probe(0,0); probe(_n-7,0); probe(0,_n-7); adjust(); timing(); typeInfo(test,mask);
+      if(_tn>=7) typeNum(test);
+      if(_cache==null) _cache=createData(_tn,_ec,_list);
+      map(_cache,mask); };
+    var probe=function(row,col){ for(var r=-1;r<=7;r+=1){ if(row+r<=-1||_n<=row+r) continue; for(var c=-1;c<=7;c+=1){ if(col+c<=-1||_n<=col+c) continue;
+      _mods[row+r][col+c]=((0<=r&&r<=6&&(c===0||c===6))||(0<=c&&c<=6&&(r===0||r===6))||(2<=r&&r<=4&&2<=c&&c<=4)); } } };
+    var timing=function(){ for(var r=8;r<_n-8;r+=1){ if(_mods[r][6]!=null) continue; _mods[r][6]=(r%2===0); } for(var c=8;c<_n-8;c+=1){ if(_mods[6][c]!=null) continue; _mods[6][c]=(c%2===0); } };
+    var adjust=function(){ var pos=QRUtil.getPatternPosition(_tn); for(var i=0;i<pos.length;i+=1) for(var j=0;j<pos.length;j+=1){ var row=pos[i],col=pos[j]; if(_mods[row][col]!=null) continue;
+      for(var r=-2;r<=2;r+=1) for(var c=-2;c<=2;c+=1) _mods[row+r][col+c]=(r===-2||r===2||c===-2||c===2||(r===0&&c===0)); } };
+    var typeNum=function(test){ var bits=QRUtil.getBCHTypeNumber(_tn);
+      for(var i=0;i<18;i+=1){ var m=(!test&&((bits>>i)&1)===1); _mods[Math.floor(i/3)][i%3+_n-8-3]=m; }
+      for(var i=0;i<18;i+=1){ var m=(!test&&((bits>>i)&1)===1); _mods[i%3+_n-8-3][Math.floor(i/3)]=m; } };
+    var typeInfo=function(test,mask){ var data=(_ec<<3)|mask; var bits=QRUtil.getBCHTypeInfo(data);
+      for(var i=0;i<15;i+=1){ var m=(!test&&((bits>>i)&1)===1); if(i<6)_mods[i][8]=m; else if(i<8)_mods[i+1][8]=m; else _mods[_n-15+i][8]=m; }
+      for(var i=0;i<15;i+=1){ var m=(!test&&((bits>>i)&1)===1); if(i<8)_mods[8][_n-i-1]=m; else if(i<9)_mods[8][15-i-1+1]=m; else _mods[8][15-i-1]=m; }
+      _mods[_n-8][8]=(!test); };
+    var map=function(data,mask){ var inc=-1,row=_n-1,bit=7,byte=0; var mf=QRUtil.getMaskFunction(mask);
+      for(var col=_n-1;col>0;col-=2){ if(col===6) col-=1;
+        while(true){ for(var c=0;c<2;c+=1){ if(_mods[row][col-c]==null){ var dark=false; if(byte<data.length) dark=(((data[byte]>>>bit)&1)===1);
+          if(mf(row,col-c)) dark=!dark; _mods[row][col-c]=dark; bit-=1; if(bit===-1){ byte+=1; bit=7; } } }
+          row+=inc; if(row<0||_n<=row){ row-=inc; inc=-inc; break; } } } };
+    _this.addData=function(d){ _list.push(new QR8bitByte(d)); _cache=null; };
+    _this.isDark=function(row,col){ if(row<0||_n<=row||col<0||_n<=col) throw new Error(row+','+col); return _mods[row][col]; };
+    _this.getModuleCount=function(){ return _n; };
+    _this.make=function(){ if(_tn<1){ var tn=1; for(;tn<40;tn++){ var rs=QRRSBlock.getRSBlocks(tn,_ec); var buf=new QRBitBuffer();
+        for(var i=0;i<_list.length;i+=1){ var d=_list[i]; buf.put(d.mode,4); buf.put(d.getLength(),QRUtil.getLengthInBits(d.mode,tn)); d.write(buf); }
+        var total=0; for(var i=0;i<rs.length;i+=1) total+=rs[i].dataCount; if(buf.getLengthInBits()<=total*8) break; } _tn=tn; }
+      var minLost=0,pat=0; for(var i=0;i<8;i+=1){ makeImpl(true,i); var lp=QRUtil.getLostPoint(_this); if(i===0||minLost>lp){ minLost=lp; pat=i; } }
+      makeImpl(false,pat); };
+    return _this;
+  };
+})();
+
+// 学生用URLのQRをSVGで描画
+(function() {
+  var qr = qrcode(0, 'M');
+  qr.addData('https://du-pd.github.io/zairyo/');
+  qr.make();
+  var n = qr.getModuleCount();
+  var quiet = 4;
+  var size = n + quiet * 2;
+  var rects = '';
+  for (var r = 0; r < n; r++) {
+    for (var c = 0; c < n; c++) {
+      if (qr.isDark(r, c)) rects += '<rect x="' + (c + quiet) + '" y="' + (r + quiet) + '" width="1" height="1"/>';
+    }
+  }
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + size + ' ' + size + '" shape-rendering="crispEdges">' +
+            '<rect width="' + size + '" height="' + size + '" fill="#ffffff"/>' +
+            '<g fill="#1a202c">' + rects + '</g></svg>';
+  document.getElementById('qr').innerHTML = svg;
+})();
+</script>
+</body>
+</html>
