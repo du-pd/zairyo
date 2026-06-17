@@ -867,11 +867,11 @@
         </div>
       </div>
       <div class="form-group" style="margin-bottom:16px;">
-        <label>寸法（縦 × 横 × 厚み）<span class="unit-note">mm</span></label>
+        <label>寸法（長さ × 幅 × 厚み）<span class="unit-note">mm</span></label>
         <div class="dim-inputs">
-          <input type="number" id="tWoodL" placeholder="縦" min="0" oninput="calcTeacherWood()">
+          <input type="number" id="tWoodL" placeholder="長さ" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="tWoodW" placeholder="横" min="0" oninput="calcTeacherWood()">
+          <input type="number" id="tWoodW" placeholder="幅" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">×</span>
           <input type="number" id="tWoodH" placeholder="厚み" min="0" oninput="calcTeacherWood()">
           <span class="dim-sep">mm</span>
@@ -998,11 +998,11 @@
         <div class="pc-step-label">① 仕入れ情報を入力</div>
         <div class="purchase-calc-row">
           <div class="form-group" style="min-width:100px; flex:none;">
-            <label>縦 mm</label>
+            <label>長さ mm</label>
             <input type="number" id="pcWoodL" placeholder="例：2000" min="0" oninput="calcPurchaseWood()">
           </div>
           <div class="form-group" style="min-width:100px; flex:none;">
-            <label>横 mm</label>
+            <label>幅 mm</label>
             <input type="number" id="pcWoodW" placeholder="例：150" min="0" oninput="calcPurchaseWood()">
           </div>
           <div class="form-group" style="min-width:100px; flex:none;">
@@ -1155,11 +1155,11 @@
         </div>
       </div>
       <div class="form-group" style="margin-bottom:16px;">
-        <label>寸法（縦 × 横 × 厚み）<span class="unit-note">単位：mm</span></label>
+        <label>寸法（長さ × 幅 × 厚み）<span class="unit-note">単位：mm</span></label>
         <div class="dim-inputs">
-          <input type="number" id="woodL" placeholder="縦" min="0" oninput="calcWood()">
+          <input type="number" id="woodL" placeholder="長さ" min="0" oninput="calcWood()">
           <span class="dim-sep">×</span>
-          <input type="number" id="woodW" placeholder="横" min="0" oninput="calcWood()">
+          <input type="number" id="woodW" placeholder="幅" min="0" oninput="calcWood()">
           <span class="dim-sep">×</span>
           <input type="number" id="woodH" placeholder="厚み" min="0" oninput="calcWood()">
           <span class="dim-sep">mm</span>
@@ -1997,6 +1997,23 @@ function resetAll() {
   calcWood();
   calcFilament();
 }
+
+// 数値入力欄に全角数字が入ったら自動で半角へ変換する（長さ・幅・厚み・本数・重さ・金額など）。
+// captureフェーズで先に補正し、その後で各欄のoninput（計算）が補正後の値で走るようにする。
+// 対象は type="number" のみ（品名・氏名・備考などの日本語テキスト欄は変換しない）。
+function toHalfWidthNumber(str) {
+  return String(str)
+    .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)) // 全角数字→半角
+    .replace(/[．。]/g, '.')   // 全角ピリオド・句点→小数点
+    .replace(/[，、]/g, '')     // 全角カンマ・読点（桁区切り）→除去
+    .replace(/[－ー―‐]/g, '-'); // 全角マイナス類→ハイフン
+}
+document.addEventListener('input', function(e) {
+  const el = e.target;
+  if (!el || el.tagName !== 'INPUT' || el.type !== 'number') return;
+  const conv = toHalfWidthNumber(el.value);
+  if (conv !== el.value) el.value = conv;
+}, true);
 
 // 単価読み込み後に初期化。?teacher 付きURLならそのまま教員モードで起動する。
 // 通常URL（生徒向け）は常に利用者画面のみ表示されるため、誤って教員モードに入ることはない。
