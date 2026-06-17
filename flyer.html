@@ -38,85 +38,85 @@
   .page {
     width: 210mm; min-height: 297mm;
     margin: 16px auto; background: #fff;
-    padding: 14mm 14mm 12mm;
+    padding: 9mm 11mm 8mm;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     display: flex; flex-direction: column;
   }
 
   /* ヘッダー */
   .head {
-    display: flex; align-items: center; gap: 14px;
-    border-bottom: 4px solid var(--navy); padding-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 3px solid var(--navy); padding-bottom: 7px;
   }
   .head .logo {
-    width: 64px; height: 64px; border-radius: 14px; flex-shrink: 0; overflow: hidden;
+    width: 50px; height: 50px; border-radius: 11px; flex-shrink: 0; overflow: hidden;
   }
   .head .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .head h1 { font-size: 1.7rem; color: var(--navy); letter-spacing: 0.02em; }
-  .head p { font-size: 0.95rem; color: var(--muted); margin-top: 3px; }
+  .head h1 { font-size: 1.4rem; color: var(--navy); letter-spacing: 0.02em; }
+  .head p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
 
   /* リード文 */
   .lead {
-    margin-top: 14px; background: #f2f6fb; border-left: 5px solid var(--navy);
-    border-radius: 8px; padding: 12px 16px; font-size: 1rem; line-height: 1.7;
+    margin-top: 8px; background: #f2f6fb; border-left: 5px solid var(--navy);
+    border-radius: 8px; padding: 8px 12px; font-size: 0.88rem; line-height: 1.5;
   }
   .lead b { color: var(--navy); }
 
   /* QR行 */
   .qr-row {
-    margin-top: 16px; display: flex; gap: 20px; align-items: center;
-    border: 2px dashed var(--gold); border-radius: 14px; padding: 16px 18px; background: #fffdf6;
+    margin-top: 9px; display: flex; gap: 14px; align-items: center;
+    border: 2px dashed var(--gold); border-radius: 12px; padding: 9px 13px; background: #fffdf6;
   }
-  .qr-box { flex-shrink: 0; width: 46mm; height: 46mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
+  .qr-box { flex-shrink: 0; width: 40mm; height: 40mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
   .qr-box svg { width: 100%; height: 100%; display: block; }
-  .qr-text h2 { font-size: 1.15rem; color: var(--gold); margin-bottom: 6px; }
-  .qr-text p { font-size: 0.95rem; line-height: 1.7; color: var(--ink); }
+  .qr-text h2 { font-size: 1rem; color: var(--gold); margin-bottom: 4px; }
+  .qr-text p { font-size: 0.84rem; line-height: 1.45; color: var(--ink); }
   .url-pill {
-    display: inline-block; margin-top: 8px; background: var(--navy); color: #fff;
-    font-size: 1.05rem; font-weight: 700; padding: 7px 16px; border-radius: 999px; letter-spacing: 0.02em;
+    display: inline-block; margin-top: 6px; background: var(--navy); color: #fff;
+    font-size: 0.96rem; font-weight: 700; padding: 5px 14px; border-radius: 999px; letter-spacing: 0.02em;
   }
 
   /* セクション見出し */
-  .sec { margin-top: 18px; }
+  .sec { margin-top: 10px; }
   .sec-title {
     display: flex; align-items: center; gap: 8px;
-    font-size: 1.15rem; font-weight: 800; color: #fff; background: var(--navy);
-    padding: 8px 14px; border-radius: 8px;
+    font-size: 1rem; font-weight: 800; color: #fff; background: var(--navy);
+    padding: 5px 12px; border-radius: 7px;
   }
-  .sec-title .badge { background: var(--gold); border-radius: 6px; padding: 1px 9px; font-size: 0.95rem; }
+  .sec-title .badge { background: var(--gold); border-radius: 6px; padding: 1px 9px; font-size: 0.88rem; }
 
   /* ステップ */
-  .steps { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
-  .step { display: flex; gap: 10px; align-items: flex-start; }
+  .steps { margin-top: 7px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+  .step { display: flex; gap: 9px; align-items: flex-start; }
   .step .num {
-    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
-    background: var(--navy); color: #fff; font-weight: 800; font-size: 0.9rem;
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--navy); color: #fff; font-weight: 800; font-size: 0.82rem;
     display: flex; align-items: center; justify-content: center;
   }
-  .step .body { font-size: 0.95rem; line-height: 1.55; }
+  .step .body { font-size: 0.85rem; line-height: 1.38; }
   .step .body b { color: var(--navy); }
-  .hint { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
 
   /* 登録方法（2カラム） */
-  .install { margin-top: 12px; display: flex; gap: 16px; }
+  .install { margin-top: 7px; display: flex; gap: 12px; }
   .device {
-    flex: 1; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fafcfe;
+    flex: 1; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 11px; background: #fafcfe;
   }
-  .device h3 { font-size: 1rem; color: var(--navy); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-  .device ol { margin-left: 18px; font-size: 0.92rem; line-height: 1.7; }
-  .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 7px; font-weight: 700; color: var(--navy); }
+  .device h3 { font-size: 0.92rem; color: var(--navy); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .device ol { margin-left: 17px; font-size: 0.82rem; line-height: 1.5; }
+  .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 6px; font-weight: 700; color: var(--navy); }
 
   .note {
-    margin-top: 14px; font-size: 0.85rem; color: var(--muted); line-height: 1.6;
-    border-top: 1px solid var(--line); padding-top: 10px;
+    margin-top: 9px; font-size: 0.78rem; color: var(--muted); line-height: 1.45;
+    border-top: 1px solid var(--line); padding-top: 7px;
   }
-  .foot { margin-top: auto; padding-top: 12px; text-align: center; font-size: 0.85rem; color: var(--muted); }
-  .foot .big { font-size: 1.05rem; color: var(--navy); font-weight: 800; }
+  .foot { margin-top: auto; padding-top: 8px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+  .foot .big { font-size: 1rem; color: var(--navy); font-weight: 800; }
 
   @media print {
     body { background: #fff; }
     .toolbar { display: none; }
-    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 12mm; }
+    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 9mm 11mm; }
   }
   @page { size: A4 portrait; margin: 0; }
 </style>
@@ -155,12 +155,12 @@
   <div class="sec">
     <div class="sec-title"><span class="badge">使い方</span> 上から順に入力するだけ</div>
     <div class="steps">
-      <div class="step"><div class="num">1</div><div class="body"><b>アプリを開く</b><div class="hint">QRコードを読み取るか、ブラウザにURLを入力します。</div></div></div>
-      <div class="step"><div class="num">2</div><div class="body"><b>「学生」を選び、名前を入力</b><div class="hint">区分で「学生」を選択し、学籍番号と氏名を入れます。</div></div></div>
-      <div class="step"><div class="num">3</div><div class="body"><b>材料の種類をタブで選ぶ</b><div class="hint">木材・アクリルなど→「体積計算」、フィラメント→「重さ計算」、それ以外→「その他」。</div></div></div>
-      <div class="step"><div class="num">4</div><div class="body"><b>数値を入れると金額が出る</b><div class="hint">長さ・幅・厚み（mm）や使用量を入力すると、金額が自動で表示されます。</div></div></div>
-      <div class="step"><div class="num">5</div><div class="body"><b>「＋リストに追加」する</b><div class="hint">材料が複数あるときは 3〜5 をくり返します。合計金額が下に出ます。</div></div></div>
-      <div class="step"><div class="num">6</div><div class="body"><b>「内容を確認して申請」</b><div class="hint">確認画面でOKすれば、申請は完了です。</div></div></div>
+      <div class="step"><div class="num">1</div><div class="body"><b>アプリを開く</b><div class="hint">QRを読み取るか、URLを入力。</div></div></div>
+      <div class="step"><div class="num">2</div><div class="body"><b>「学生」を選び、名前を入力</b><div class="hint">区分で「学生」を選び、学籍番号と氏名を入力。</div></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><b>材料の種類をタブで選ぶ</b><div class="hint">木材など→体積計算／フィラメント→重さ計算／その他。</div></div></div>
+      <div class="step"><div class="num">4</div><div class="body"><b>数値を入れると金額が出る</b><div class="hint">長さ・幅・厚み（mm）や量を入力すると自動表示。</div></div></div>
+      <div class="step"><div class="num">5</div><div class="body"><b>「＋リストに追加」する</b><div class="hint">複数あるときは 3〜5 をくり返す。合計が下に出ます。</div></div></div>
+      <div class="step"><div class="num">6</div><div class="body"><b>「内容を確認して申請」</b><div class="hint">確認画面でOKすれば完了。</div></div></div>
     </div>
     <div class="hint" style="margin-top:10px;">💡 先生から「確認依頼」のリンクが届いたときは、リンクを開いて内容を確認し、<b>「OK・承認する」</b>を押してください。</div>
   </div>
