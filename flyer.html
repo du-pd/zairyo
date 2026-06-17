@@ -38,72 +38,72 @@
   .page {
     width: 210mm; min-height: 297mm;
     margin: 16px auto; background: #fff;
-    padding: 8mm 10mm; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    display: flex; flex-direction: column;
+    padding: 10mm 11mm; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column; justify-content: space-between;
   }
 
   /* ===== HERO（つかみ） ===== */
   .hero {
     background: linear-gradient(135deg, #2b4c7e, #1a365d);
-    color: #fff; border-radius: 14px; padding: 14px 72px 15px 22px; position: relative;
+    color: #fff; border-radius: 16px; padding: 22px 86px 24px 28px; position: relative;
   }
   .hero .eyebrow {
     display: inline-flex; align-items: center; gap: 5px;
-    background: var(--gold); color: #fff; font-weight: 800; font-size: 0.8rem;
-    padding: 3px 12px; border-radius: 999px;
+    background: var(--gold); color: #fff; font-weight: 800; font-size: 0.9rem;
+    padding: 4px 14px; border-radius: 999px;
   }
-  .hero h1 { font-size: 2.05rem; line-height: 1.12; margin-top: 9px; letter-spacing: 0.01em; }
+  .hero h1 { font-size: 2.6rem; line-height: 1.14; margin-top: 12px; letter-spacing: 0.01em; }
   .hero h1 .accent { color: #ffd87a; }
-  .hero .sub { font-size: 0.92rem; margin-top: 7px; color: #dbe6f5; line-height: 1.45; }
-  .hero .ico { position: absolute; top: 14px; right: 16px; width: 52px; height: 52px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+  .hero .sub { font-size: 1.05rem; margin-top: 10px; color: #dbe6f5; line-height: 1.5; }
+  .hero .ico { position: absolute; top: 20px; right: 20px; width: 66px; height: 66px; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
   .hero .ico img { width: 100%; height: 100%; display: block; }
 
   /* ===== HOOK（QR＋メリット） ===== */
   .hook {
-    margin-top: 13px; display: flex; gap: 18px; align-items: center;
-    border: 2px solid var(--gold); border-radius: 14px; padding: 12px 16px; background: #fffdf6;
+    display: flex; gap: 24px; align-items: center;
+    border: 2px solid var(--gold); border-radius: 16px; padding: 18px 22px; background: #fffdf6;
   }
-  .qr-box { flex-shrink: 0; width: 40mm; height: 40mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
+  .qr-box { flex-shrink: 0; width: 50mm; height: 50mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
   .qr-box svg { width: 100%; height: 100%; display: block; }
   .hook-r { flex: 1; }
-  .hook-r .cta { font-size: 1.2rem; font-weight: 800; color: #b7791f; }
-  .merits { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
-  .merits li { list-style: none; font-size: 0.92rem; font-weight: 700; color: var(--ink); }
-  .merits li .ck { color: #2f855a; font-weight: 900; margin-right: 3px; }
+  .hook-r .cta { font-size: 1.55rem; font-weight: 800; color: #b7791f; line-height: 1.25; }
+  .merits { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 9px 20px; }
+  .merits li { list-style: none; font-size: 1.1rem; font-weight: 700; color: var(--ink); }
+  .merits li .ck { color: #2f855a; font-weight: 900; margin-right: 4px; }
   .url-pill {
-    display: inline-block; margin-top: 11px; background: var(--navy); color: #fff;
-    font-size: 0.95rem; font-weight: 700; padding: 5px 14px; border-radius: 999px; letter-spacing: 0.02em;
+    display: inline-block; margin-top: 16px; background: var(--navy); color: #fff;
+    font-size: 1.1rem; font-weight: 700; padding: 7px 18px; border-radius: 999px; letter-spacing: 0.02em;
   }
 
   /* ===== FLOW（横並び手順） ===== */
-  .flow-title { margin-top: 14px; font-size: 1.05rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 8px; }
-  .flow-title .tag { background: var(--navy); color: #fff; font-size: 0.8rem; padding: 2px 10px; border-radius: 6px; }
-  .flow { margin-top: 8px; display: flex; align-items: stretch; gap: 3px; }
-  .f { flex: 1; text-align: center; background: #f2f6fb; border: 1px solid #d8e2f0; border-radius: 10px; padding: 8px 3px 7px; }
-  .f .fi { font-size: 1.5rem; line-height: 1; }
-  .f .fn { display: inline-block; margin-top: 4px; font-size: 0.68rem; font-weight: 800; color: #fff; background: var(--navy); border-radius: 999px; padding: 0 7px; }
-  .f .fl { margin-top: 3px; font-size: 0.78rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
-  .arrow { align-self: center; color: var(--gold); font-weight: 900; font-size: 1.1rem; }
-  .flow-note { margin-top: 7px; font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .flow-title { font-size: 1.25rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 9px; }
+  .flow-title .tag { background: var(--navy); color: #fff; font-size: 0.92rem; padding: 3px 12px; border-radius: 6px; }
+  .flow { margin-top: 12px; display: flex; align-items: stretch; gap: 5px; }
+  .f { flex: 1; text-align: center; background: #f2f6fb; border: 1px solid #d8e2f0; border-radius: 12px; padding: 14px 4px 12px; }
+  .f .fi { font-size: 2.3rem; line-height: 1; }
+  .f .fn { display: inline-block; margin-top: 8px; font-size: 0.78rem; font-weight: 800; color: #fff; background: var(--navy); border-radius: 999px; padding: 1px 9px; }
+  .f .fl { margin-top: 5px; font-size: 0.95rem; font-weight: 700; color: var(--ink); line-height: 1.25; }
+  .arrow { align-self: center; color: var(--gold); font-weight: 900; font-size: 1.4rem; }
+  .flow-note { margin-top: 12px; font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
   .flow-note b { color: var(--navy); }
 
   /* ===== DETAILS（詳細・控えめ） ===== */
-  .details { margin-top: 13px; background: #f7f9fc; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
-  .details-title { font-size: 0.88rem; font-weight: 800; color: var(--muted); margin-bottom: 8px; }
-  .cols { display: flex; gap: 14px; }
-  .device { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 11px; }
-  .device h3 { font-size: 0.88rem; color: var(--navy); margin-bottom: 4px; }
-  .device ol { margin-left: 16px; font-size: 0.8rem; line-height: 1.55; }
-  .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 6px; font-weight: 700; color: var(--navy); }
-  .notes { margin-top: 9px; font-size: 0.77rem; color: var(--muted); line-height: 1.5; }
+  .details { background: #f7f9fc; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .details-title { font-size: 1rem; font-weight: 800; color: var(--muted); margin-bottom: 11px; }
+  .cols { display: flex; gap: 18px; }
+  .device { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 15px; }
+  .device h3 { font-size: 1rem; color: var(--navy); margin-bottom: 6px; }
+  .device ol { margin-left: 18px; font-size: 0.92rem; line-height: 1.8; }
+  .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 7px; font-weight: 700; color: var(--navy); }
+  .notes { margin-top: 13px; font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
   .notes b { color: var(--ink); }
 
-  .foot { margin-top: 8px; text-align: center; font-size: 0.76rem; color: var(--muted); }
+  .foot { text-align: center; font-size: 0.9rem; color: var(--muted); }
 
   @media print {
     body { background: #fff; }
     .toolbar { display: none; }
-    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 8mm 10mm; }
+    .page { box-shadow: none; margin: 0; width: auto; min-height: 285mm; padding: 10mm 11mm; }
   }
   @page { size: A4 portrait; margin: 0; }
 </style>
@@ -137,6 +137,7 @@
     </div>
   </div>
 
+  <div class="flowgroup">
   <div class="flow-title"><span class="tag">使い方</span> 入力は順番にこれだけ</div>
   <div class="flow">
     <div class="f"><div class="fi">📱</div><div class="fn">1</div><div class="fl">開く</div></div>
@@ -152,6 +153,7 @@
     <div class="f"><div class="fi">✅</div><div class="fn">6</div><div class="fl">申請</div></div>
   </div>
   <div class="flow-note">③ 種類＝木材など→「体積計算」／フィラメント→「重さ計算」。　④ 長さ・幅・厚み（mm）や使用量を入れると <b>金額が自動表示</b> されます。</div>
+  </div>
 
   <div class="details">
     <div class="details-title">▼ くわしい説明（ホーム画面への追加・注意事項）</div>
