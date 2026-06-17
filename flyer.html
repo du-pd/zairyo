@@ -38,85 +38,72 @@
   .page {
     width: 210mm; min-height: 297mm;
     margin: 16px auto; background: #fff;
-    padding: 7mm 11mm 6mm;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 8mm 10mm; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     display: flex; flex-direction: column;
   }
 
-  /* ヘッダー */
-  .head {
-    display: flex; align-items: center; gap: 12px;
-    border-bottom: 3px solid var(--navy); padding-bottom: 7px;
+  /* ===== HERO（つかみ） ===== */
+  .hero {
+    background: linear-gradient(135deg, #2b4c7e, #1a365d);
+    color: #fff; border-radius: 14px; padding: 14px 72px 15px 22px; position: relative;
   }
-  .head .logo {
-    width: 50px; height: 50px; border-radius: 11px; flex-shrink: 0; overflow: hidden;
+  .hero .eyebrow {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--gold); color: #fff; font-weight: 800; font-size: 0.8rem;
+    padding: 3px 12px; border-radius: 999px;
   }
-  .head .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .head h1 { font-size: 1.4rem; color: var(--navy); letter-spacing: 0.02em; }
-  .head p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .hero h1 { font-size: 2.05rem; line-height: 1.12; margin-top: 9px; letter-spacing: 0.01em; }
+  .hero h1 .accent { color: #ffd87a; }
+  .hero .sub { font-size: 0.92rem; margin-top: 7px; color: #dbe6f5; line-height: 1.45; }
+  .hero .ico { position: absolute; top: 14px; right: 16px; width: 52px; height: 52px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+  .hero .ico img { width: 100%; height: 100%; display: block; }
 
-  /* リード文 */
-  .lead {
-    margin-top: 7px; background: #f2f6fb; border-left: 5px solid var(--navy);
-    border-radius: 8px; padding: 7px 11px; font-size: 0.85rem; line-height: 1.45;
+  /* ===== HOOK（QR＋メリット） ===== */
+  .hook {
+    margin-top: 13px; display: flex; gap: 18px; align-items: center;
+    border: 2px solid var(--gold); border-radius: 14px; padding: 12px 16px; background: #fffdf6;
   }
-  .lead b { color: var(--navy); }
-
-  /* QR行 */
-  .qr-row {
-    margin-top: 7px; display: flex; gap: 14px; align-items: center;
-    border: 2px dashed var(--gold); border-radius: 12px; padding: 8px 13px; background: #fffdf6;
-  }
-  .qr-box { flex-shrink: 0; width: 37mm; height: 37mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
+  .qr-box { flex-shrink: 0; width: 40mm; height: 40mm; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
   .qr-box svg { width: 100%; height: 100%; display: block; }
-  .qr-text h2 { font-size: 1rem; color: var(--gold); margin-bottom: 4px; }
-  .qr-text p { font-size: 0.84rem; line-height: 1.45; color: var(--ink); }
+  .hook-r { flex: 1; }
+  .hook-r .cta { font-size: 1.2rem; font-weight: 800; color: #b7791f; }
+  .merits { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .merits li { list-style: none; font-size: 0.92rem; font-weight: 700; color: var(--ink); }
+  .merits li .ck { color: #2f855a; font-weight: 900; margin-right: 3px; }
   .url-pill {
-    display: inline-block; margin-top: 6px; background: var(--navy); color: #fff;
-    font-size: 0.96rem; font-weight: 700; padding: 5px 14px; border-radius: 999px; letter-spacing: 0.02em;
+    display: inline-block; margin-top: 11px; background: var(--navy); color: #fff;
+    font-size: 0.95rem; font-weight: 700; padding: 5px 14px; border-radius: 999px; letter-spacing: 0.02em;
   }
 
-  /* セクション見出し */
-  .sec { margin-top: 7px; }
-  .sec-title {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 1rem; font-weight: 800; color: #fff; background: var(--navy);
-    padding: 5px 12px; border-radius: 7px;
-  }
-  .sec-title .badge { background: var(--gold); border-radius: 6px; padding: 1px 9px; font-size: 0.88rem; }
+  /* ===== FLOW（横並び手順） ===== */
+  .flow-title { margin-top: 14px; font-size: 1.05rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+  .flow-title .tag { background: var(--navy); color: #fff; font-size: 0.8rem; padding: 2px 10px; border-radius: 6px; }
+  .flow { margin-top: 8px; display: flex; align-items: stretch; gap: 3px; }
+  .f { flex: 1; text-align: center; background: #f2f6fb; border: 1px solid #d8e2f0; border-radius: 10px; padding: 8px 3px 7px; }
+  .f .fi { font-size: 1.5rem; line-height: 1; }
+  .f .fn { display: inline-block; margin-top: 4px; font-size: 0.68rem; font-weight: 800; color: #fff; background: var(--navy); border-radius: 999px; padding: 0 7px; }
+  .f .fl { margin-top: 3px; font-size: 0.78rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .arrow { align-self: center; color: var(--gold); font-weight: 900; font-size: 1.1rem; }
+  .flow-note { margin-top: 7px; font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .flow-note b { color: var(--navy); }
 
-  /* ステップ */
-  .steps { margin-top: 7px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
-  .step { display: flex; gap: 9px; align-items: flex-start; }
-  .step .num {
-    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--navy); color: #fff; font-weight: 800; font-size: 0.82rem;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .step .body { font-size: 0.85rem; line-height: 1.38; }
-  .step .body b { color: var(--navy); }
-  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
-
-  /* 登録方法（2カラム） */
-  .install { margin-top: 7px; display: flex; gap: 12px; }
-  .device {
-    flex: 1; border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 10px; background: #fafcfe;
-  }
-  .device h3 { font-size: 0.9rem; color: var(--navy); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
-  .device ol { margin-left: 17px; font-size: 0.81rem; line-height: 1.45; }
+  /* ===== DETAILS（詳細・控えめ） ===== */
+  .details { margin-top: 13px; background: #f7f9fc; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+  .details-title { font-size: 0.88rem; font-weight: 800; color: var(--muted); margin-bottom: 8px; }
+  .cols { display: flex; gap: 14px; }
+  .device { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 11px; }
+  .device h3 { font-size: 0.88rem; color: var(--navy); margin-bottom: 4px; }
+  .device ol { margin-left: 16px; font-size: 0.8rem; line-height: 1.55; }
   .device .key { background: #edf2f9; border-radius: 5px; padding: 1px 6px; font-weight: 700; color: var(--navy); }
+  .notes { margin-top: 9px; font-size: 0.77rem; color: var(--muted); line-height: 1.5; }
+  .notes b { color: var(--ink); }
 
-  .note {
-    margin-top: 7px; font-size: 0.77rem; color: var(--muted); line-height: 1.4;
-    border-top: 1px solid var(--line); padding-top: 6px;
-  }
-  .foot { margin-top: 7px; padding-top: 6px; text-align: center; font-size: 0.78rem; color: var(--muted); }
-  .foot .big { font-size: 1rem; color: var(--navy); font-weight: 800; }
+  .foot { margin-top: 8px; text-align: center; font-size: 0.76rem; color: var(--muted); }
 
   @media print {
     body { background: #fff; }
     .toolbar { display: none; }
-    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 7mm 11mm; }
+    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 8mm 10mm; }
   }
   @page { size: A4 portrait; margin: 0; }
 </style>
@@ -130,68 +117,64 @@
 
 <div class="page">
 
-  <div class="head">
-    <div class="logo"><img src="icon-student.png" alt="材料費計算システムのアイコン"></div>
-    <div>
-      <h1>材料費計算システム</h1>
-      <p>木材・3Dプリンタ用フィラメントなどの材料費を、その場で計算・申請できます</p>
-    </div>
+  <div class="hero">
+    <div class="ico"><img src="icon-student.png" alt="材料費計算システムのアイコン"></div>
+    <span class="eyebrow">🎓 学生専用ツール</span>
+    <h1>材料費、その場で<span class="accent">かんたん計算！</span></h1>
+    <div class="sub">授業・制作で使った材料費を、入力するだけで自動計算。木材・3Dフィラメントに対応。</div>
   </div>
 
-  <div class="lead">
-    使った材料の費用を<b>スマホやPCで計算</b>できるWebアプリ。寸法や使用量を入れるだけで<b>金額を自動表示</b>します。インストール不要、下のQRからすぐ使えます。
-  </div>
-
-  <div class="qr-row">
+  <div class="hook">
     <div class="qr-box"><div id="qr"></div></div>
-    <div class="qr-text">
-      <h2>📱 スマホでQRコードを読み取る</h2>
-      <p>カメラアプリでQRを読み取るか、ブラウザに下のアドレスを入力してください。</p>
-      <span class="url-pill">du-pd.github.io/zairyo</span>
+    <div class="hook-r">
+      <div class="cta">👉 まずはQRコードを読み取る！</div>
+      <ul class="merits">
+        <li><span class="ck">✔</span>インストール不要</li>
+        <li><span class="ck">✔</span>木材・フィラメント対応</li>
+        <li><span class="ck">✔</span>金額を自動計算</li>
+      </ul>
+      <span class="url-pill">📱 du-pd.github.io/zairyo</span>
     </div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title"><span class="badge">使い方</span> 上から順に入力するだけ</div>
-    <div class="steps">
-      <div class="step"><div class="num">1</div><div class="body"><b>アプリを開く</b><div class="hint">QRを読み取るか、URLを入力。</div></div></div>
-      <div class="step"><div class="num">2</div><div class="body"><b>「学生」を選び、名前を入力</b><div class="hint">区分で「学生」を選び、学籍番号と氏名を入力。</div></div></div>
-      <div class="step"><div class="num">3</div><div class="body"><b>材料の種類をタブで選ぶ</b><div class="hint">木材など→体積計算／フィラメント→重さ計算／その他。</div></div></div>
-      <div class="step"><div class="num">4</div><div class="body"><b>数値を入れると金額が出る</b><div class="hint">長さ・幅・厚み（mm）や量を入力すると自動表示。</div></div></div>
-      <div class="step"><div class="num">5</div><div class="body"><b>「＋リストに追加」する</b><div class="hint">複数あるときは 3〜5 をくり返す。合計が下に出ます。</div></div></div>
-      <div class="step"><div class="num">6</div><div class="body"><b>「内容を確認して申請」</b><div class="hint">確認画面でOKすれば完了。</div></div></div>
-    </div>
-    <div class="hint" style="margin-top:10px;">💡 先生から「確認依頼」のリンクが届いたときは、リンクを開いて内容を確認し、<b>「OK・承認する」</b>を押してください。</div>
+  <div class="flow-title"><span class="tag">使い方</span> 入力は順番にこれだけ</div>
+  <div class="flow">
+    <div class="f"><div class="fi">📱</div><div class="fn">1</div><div class="fl">開く</div></div>
+    <div class="arrow">›</div>
+    <div class="f"><div class="fi">✍️</div><div class="fn">2</div><div class="fl">名前を入力</div></div>
+    <div class="arrow">›</div>
+    <div class="f"><div class="fi">🗂️</div><div class="fn">3</div><div class="fl">種類を選ぶ</div></div>
+    <div class="arrow">›</div>
+    <div class="f"><div class="fi">📏</div><div class="fn">4</div><div class="fl">寸法を入力</div></div>
+    <div class="arrow">›</div>
+    <div class="f"><div class="fi">➕</div><div class="fn">5</div><div class="fl">リスト追加</div></div>
+    <div class="arrow">›</div>
+    <div class="f"><div class="fi">✅</div><div class="fn">6</div><div class="fl">申請</div></div>
   </div>
+  <div class="flow-note">③ 種類＝木材など→「体積計算」／フィラメント→「重さ計算」。　④ 長さ・幅・厚み（mm）や使用量を入れると <b>金額が自動表示</b> されます。</div>
 
-  <div class="sec">
-    <div class="sec-title"><span class="badge">登録</span> スマホのホーム画面に追加すると便利！</div>
-    <div class="install">
+  <div class="details">
+    <div class="details-title">▼ くわしい説明（ホーム画面への追加・注意事項）</div>
+    <div class="cols">
       <div class="device">
-        <h3>🍎 iPhone・iPad</h3>
+        <h3>🍎 iPhone・iPad に追加</h3>
         <ol>
-          <li>QRからアプリを開く</li>
-          <li><span class="key">共有</span>ボタン（□に↑）をタップ<div class="hint" style="margin:2px 0 0;">Safariは画面下／上にあります。Chromeは右上の<span class="key">⋯</span>→<span class="key">共有</span>から。</div></li>
-          <li>メニューを下にスクロールし<span class="key">ホーム画面に追加</span>を選ぶ</li>
-          <li>右上の<span class="key">追加</span>をタップ</li>
+          <li><span class="key">共有</span>ボタン（□に↑）をタップ<br><span style="color:var(--muted);">※Chromeは右上 <span class="key">⋯</span> →<span class="key">共有</span></span></li>
+          <li><span class="key">ホーム画面に追加</span> → <span class="key">追加</span></li>
         </ol>
       </div>
       <div class="device">
-        <h3>🤖 Android（Chrome）</h3>
+        <h3>🤖 Android（Chrome）に追加</h3>
         <ol>
-          <li>QRからアプリを開く</li>
-          <li>右上の<span class="key">⋮</span>メニューをタップ</li>
-          <li><span class="key">ホーム画面に追加</span>（または<span class="key">アプリをインストール</span>）を選ぶ</li>
-          <li><span class="key">追加</span>をタップ</li>
+          <li>右上の <span class="key">⋮</span> メニューをタップ</li>
+          <li><span class="key">ホーム画面に追加</span> → <span class="key">追加</span></li>
         </ol>
       </div>
     </div>
-    <div class="hint" style="margin-top:8px;">📌 iPhoneはSafari・Chromeどちらでも追加できます。ホーム画面に「材料費計算」のアイコンができ、次回からワンタップで開けます。</div>
-  </div>
-
-  <div class="note">
-    ※ 表示された金額は、<b>担当教員が内容を確認したうえで最終決定</b>します。<br>
-    ※ 単位は <b>mm（ミリメートル）</b> です。cm と間違えないようご注意ください（例：15cm → 150mm）。
+    <div class="notes">
+      ※ 先生から「確認依頼」リンクが届いたら、開いて内容を確認し <b>「OK・承認する」</b> を押してください。<br>
+      ※ 表示金額は <b>担当教員が確認して最終決定</b> します。　※ 単位は <b>mm</b> です（例：15cm → 150mm）。
+    </div>
   </div>
 
   <div class="foot">困ったときは担当の先生・技術職員までお問い合わせください</div>
