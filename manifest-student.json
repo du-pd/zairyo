@@ -1,0 +1,13 @@
+{
+  "name": "材料費計算システム",
+  "short_name": "材料費計算",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#2b4c7e",
+  "icons": [
+    { "src": "icon-student.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-student.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }
+  ]
+}

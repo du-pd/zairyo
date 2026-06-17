@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>材料費計算システム</title>
+
+<!-- ホーム画面アイコン／アプリ名（?teacher の有無で学生用・教員用を出し分け） -->
+<link id="faviconLink" rel="icon" href="icon-student.png">
+<link id="appleIconLink" rel="apple-touch-icon" href="icon-student.png">
+<link id="manifestLink" rel="manifest" href="manifest-student.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta id="appTitleMeta" name="apple-mobile-web-app-title" content="材料費計算">
+<meta id="themeColorMeta" name="theme-color" content="#2b4c7e">
+<script>
+// ?teacher 付きURLなら、保存時のアイコン・名前・テーマ色を教員用に差し替える。
+// （ホーム画面に追加するのはページ読み込み後なので、ここでの差し替えが反映される）
+(function () {
+  if (!new URLSearchParams(location.search).has('teacher')) return;
+  document.title = '材料費（教員）';
+  var setHref = function (id, href) { var el = document.getElementById(id); if (el) el.href = href; };
+  setHref('faviconLink', 'icon-teacher.png');
+  setHref('appleIconLink', 'icon-teacher.png');
+  setHref('manifestLink', 'manifest-teacher.json');
+  var t = document.getElementById('appTitleMeta'); if (t) t.content = '材料費（教員）';
+  var c = document.getElementById('themeColorMeta'); if (c) c.content = '#d69e2e';
+})();
+</script>
 <style>
   /* ===== 教員確認依頼カード ===== */
   .pending-card {
