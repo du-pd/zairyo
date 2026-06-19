@@ -2295,7 +2295,7 @@ function copyTeacherList() {
   const studentName = document.getElementById('tStudentName').value.trim();
   const notes = document.getElementById('tNotes').value.trim();
 
-  let text = '【材料費 確認リスト】\n';
+  let text = '';
   if (studentName) text += '氏名：' + studentName + '\n';
   text += '----------------\n';
   tItems.forEach(i => {
@@ -2304,7 +2304,6 @@ function copyTeacherList() {
   text += '----------------\n';
   text += '合計：' + total.toLocaleString() + '円（10円単位で四捨五入）';
   if (notes) text += '\n備考：' + notes;
-  text += '\n※金額は担当教員が確認して最終決定します。';
 
   const done = () => {
     const msg = document.getElementById('tCopyListMsg');
