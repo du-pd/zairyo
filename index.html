@@ -688,6 +688,13 @@
     border-color: #2b4c7e;
   }
   .price-edit-row .pe-unit { font-size: 0.8rem; color: #a0aec0; white-space: nowrap; }
+  .price-edit-row .pe-purchase {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #718096;
+    margin-top: 2px;
+  }
   .price-add-row {
     display: flex;
     gap: 8px;
@@ -2518,7 +2525,7 @@ function renderPriceEditList() {
     <div style="margin-top:10px;font-size:0.78rem;font-weight:700;color:#718096;padding:2px 4px;border-bottom:1px solid #e2e8f0;">${escapeHtml(cat)}</div>
     ${grouped[cat].map(w => `
       <div class="price-edit-row">
-        <span class="pe-name">${escapeHtml(w.name)}</span>
+        <span class="pe-name">${escapeHtml(w.name)}${woodPurchaseNote(w)}</span>
         <select style="font-size:0.75rem;padding:4px;border:1px solid #cbd5e0;border-radius:6px;" onchange="WOOD_PRICES[${w._idx}].category=this.value;renderPriceEditList();rebuildSelects();">
           ${['無垢材','合板','その他材料'].map(cat2=>`<option value="${cat2}"${cat2===w.category?' selected':''}>
             ${cat2}</option>`).join('')}
@@ -2534,7 +2541,7 @@ function renderPriceEditList() {
   const filList = document.getElementById('filamentPriceList');
   filList.innerHTML = FILAMENT_PRICES.map((f, i) => `
     <div class="price-edit-row">
-      <span class="pe-name">${escapeHtml(f.name)}</span>
+      <span class="pe-name">${escapeHtml(f.name)}${filamentPurchaseNote(f)}</span>
       <input type="number" value="${f.pricePerG}" min="0" step="0.1" onchange="FILAMENT_PRICES[${i}].pricePerG = parseFloat(this.value)||0">
       <span class="pe-unit">円/g</span>
       <button class="remove-btn" onclick="removeFilamentPrice(${i})" title="削除">✕</button>
@@ -2554,6 +2561,23 @@ function renderPriceEditList() {
         </div>
       `).join('');
   }
+}
+
+// 仕入れ情報（仕入れ計算ツールから追加したときだけ持つ）
+function purchaseDateText(d) {
+  return d ? '（' + escapeHtml(String(d).slice(0, 10)) + '）' : '';
+}
+function woodPurchaseNote(w) {
+  if (!w.pcCost) return '';
+  return `<span class="pe-purchase">仕入：${w.pcL}×${w.pcW}×${w.pcH}mm ×${w.pcQty}本 ¥${Number(w.pcCost).toLocaleString()}　仕入単価 ¥${Number(w.pcUnit).toLocaleString()}/m³${purchaseDateText(w.pcDate)}</span>`;
+}
+function filamentPurchaseNote(f) {
+  if (!f.pcCost) return '';
+  return `<span class="pe-purchase">仕入：${f.pcWeight}g ¥${Number(f.pcCost).toLocaleString()}　仕入単価 ¥${Number(f.pcUnit).toFixed(2)}/g${purchaseDateText(f.pcDate)}</span>`;
+}
+function todayText() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
 function removeWoodPrice(i) {
@@ -2576,7 +2600,8 @@ function addWoodPrice() {
   const price = parseInt(document.getElementById('newWoodPrice').value) || 0;
   const category = document.getElementById('newWoodCategory').value || '無垢材';
   if (!name || !price) { alert('品名と単価を入力してください'); return; }
-  WOOD_PRICES.push({ name, pricePerM3: price, category });
+  WOOD_PRICES.push({ name, pricePerM3: price, category, ...(pendingWoodPurchase || {}) });
+  pendingWoodPurchase = null;
   document.getElementById('newWoodName').value = '';
   document.getElementById('newWoodPrice').value = '';
   renderPriceEditList();
@@ -2606,7 +2631,8 @@ function addFilamentPrice() {
   const name = document.getElementById('newFilamentName').value.trim();
   const price = parseFloat(document.getElementById('newFilamentPrice').value) || 0;
   if (!name || !price) { alert('種類名と単価を入力してください'); return; }
-  FILAMENT_PRICES.push({ name, pricePerG: price });
+  FILAMENT_PRICES.push({ name, pricePerG: price, ...(pendingFilamentPurchase || {}) });
+  pendingFilamentPurchase = null;
   document.getElementById('newFilamentName').value = '';
   document.getElementById('newFilamentPrice').value = '';
   renderPriceEditList();
@@ -2685,6 +2711,10 @@ function resetPricesToDefault() {
   setTimeout(() => { msg.style.display = 'none'; msg.textContent = '✅ 保存しました'; }, 2500);
 }
 
+// 「この単価を新規追加に反映」を押したときの仕入れ情報。＋追加で材料に付けて保存する
+let pendingWoodPurchase = null;
+let pendingFilamentPurchase = null;
+
 function calcPurchaseWood() {
   const L = parseFloat(document.getElementById('pcWoodL').value) || 0;
   const W = parseFloat(document.getElementById('pcWoodW').value) || 0;
@@ -2719,12 +2749,13 @@ function calcPurchaseWood() {
         体積：${volM3.toFixed(4)} m³（${qty}本）<br>
         仕入単価：¥${pricePerM3.toLocaleString()} /m³　→　<strong style="color:#276749;">請求単価：¥${sellingPerM3.toLocaleString()} /m³</strong>（×1.2）
       </div>
-      <button class="pc-apply-btn" onclick="applyWoodPurchasePrice(${sellingPerM3})">この単価を新規追加に反映</button>
+      <button class="pc-apply-btn" onclick="applyWoodPurchasePrice(${sellingPerM3}, ${L}, ${W}, ${H}, ${qty}, ${cost}, ${pricePerM3})">この単価を新規追加に反映</button>
     </div>
   `;
 }
 
-function applyWoodPurchasePrice(price) {
+function applyWoodPurchasePrice(price, L, W, H, qty, cost, unitCost) {
+  pendingWoodPurchase = { pcL: L, pcW: W, pcH: H, pcQty: qty, pcCost: cost, pcUnit: unitCost, pcDate: todayText() };
   document.getElementById('newWoodPrice').value = price;
   document.getElementById('newWoodName').focus();
 }
@@ -2747,12 +2778,13 @@ function calcPurchaseFilament() {
       <div class="pc-result-text">
         仕入単価：¥${pricePerG.toFixed(2)} /g　→　<strong style="color:#276749;">請求単価：¥${sellingPerG} /g</strong>（×1.2）
       </div>
-      <button class="pc-apply-btn" onclick="applyFilamentPurchasePrice(${sellingPerG})">この単価を新規追加に反映</button>
+      <button class="pc-apply-btn" onclick="applyFilamentPurchasePrice(${sellingPerG}, ${weight}, ${cost}, ${Math.round(pricePerG * 100) / 100})">この単価を新規追加に反映</button>
     </div>
   `;
 }
 
-function applyFilamentPurchasePrice(price) {
+function applyFilamentPurchasePrice(price, weight, cost, unitCost) {
+  pendingFilamentPurchase = { pcWeight: weight, pcCost: cost, pcUnit: unitCost, pcDate: todayText() };
   document.getElementById('newFilamentPrice').value = price;
   document.getElementById('newFilamentName').focus();
 }
